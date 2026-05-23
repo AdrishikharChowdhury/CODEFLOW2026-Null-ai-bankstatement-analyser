@@ -1,11 +1,10 @@
 import { navlinks } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 const Navbar = () => {
   return (
-    <div className="relative z-10 bg-green-pea-1600 mx-6 my-4 rounded-2xl p-5 flex justify-between items-center text-lg">
+    <div className="relative z-10 bg-green-pea-1600 mx-6 my-4 rounded-2xl p-5 flex justify-between items-center text-lg border-2 border-green-pea-300 sticky">
       <Link href="/">
         <Image
           src={"/logo.png"}
@@ -17,7 +16,9 @@ const Navbar = () => {
       </Link>
       <ul className="flex justify-centr items-center gap-4">
         {navlinks.map((link, idx: number) => (
-          <li key={idx}>{link.name}</li>
+          <Link href={link.link} key={idx}>
+            <li>{link.name}</li>
+          </Link>
         ))}
       </ul>
       <div className="cta flex justify-center items-center gap-6">
