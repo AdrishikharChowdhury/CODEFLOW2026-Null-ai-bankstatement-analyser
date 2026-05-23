@@ -12,9 +12,11 @@ export async function syncUser() {
     .eq("author", userId)
     .single();
   if (existing) return { success: true };
-  
-  const email = user.emailAddresses[0]?.emailAddress;
 
+  const user = await currentUser();
+  if (!user) return { error: "User not found" };
+
+  const email = user.emailAddresses[0]?.emailAddress;
   const firstName = user.firstName;
   const lastName = user.lastName;
   const { error } = await supabase
