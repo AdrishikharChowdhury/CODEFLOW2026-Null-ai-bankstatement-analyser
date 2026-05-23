@@ -1,0 +1,10 @@
+{
+  "labels": [
+    "Vendor Outflows",
+    "Revenue Inflows",
+    "Utilities",
+    "Salaries",
+    "Compliance/Taxes"
+  ],
+  "normalize_embeddings": false
+}
