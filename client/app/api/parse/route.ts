@@ -43,6 +43,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         success: data.success,
         transactions: data.transactions ?? [],
         health_score: data.health_score ?? null,
+        category_expense: data.category_expense ?? [],
+        income_summary: data.income_summary ?? [],
+        recurring_payments: data.recurring_payments ?? [],
+        recommendations: data.recommendations ?? [],
+        csv_path: data.csv_path ?? null,
+        json_path: data.json_path ?? null,
       },
       { status: 200 },
     );

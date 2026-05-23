@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 from sanitization import sanitize
 from parser import extract_rows_from_pdf, self_healing_normalization, compute_financial_health
+from analyzer import analyze_csv
 from pydantic import BaseModel
 
 class ParseRequest(BaseModel):
@@ -16,7 +17,12 @@ class ParseResponse(BaseModel):
     success: bool
     transactions: list | None = None
     health_score: dict | None = None
+    category_expense: list | None = None
+    income_summary: list | None = None
+    recurring_payments: list | None = None
+    recommendations: list | None = None
     csv_path: str | None = None
+    json_path: str | None = None
     error: str | None = None
 
 app = FastAPI(title="Financialo API")
@@ -74,32 +80,40 @@ def parse_statement(req: ParseRequest):
         print(f"Normalization failed: {e}")
         return ParseResponse(success=False, error=f"Normalization failed: {e}")
 
-    # 4. Redact sensitive info
+    # 4. Sanitize & save CSV
     try:
+        csv_name = req.storage_path.replace("/", "_").rsplit(".", 1)[0] + ".csv"
+        csv_path = os.path.join("csv", csv_name)
+        os.makedirs("csv", exist_ok=True)
         transactions = processed_df.fillna(0).to_dict(orient="records")
         for txn in transactions:
             if "clean_description" in txn:
                 txn["clean_description"] = sanitize(str(txn["clean_description"]))
             if "description" in txn:
                 txn["description"] = sanitize(str(txn["description"]))
-    except Exception as e:
-        print(f"Sanitization failed: {e}")
-        return ParseResponse(success=False, error=f"Sanitization failed: {e}")
-
-    # 5. Save CSV locally
-    try:
-        os.makedirs("csv", exist_ok=True)
-        csv_name = req.storage_path.replace("/", "_").rsplit(".", 1)[0] + ".csv"
-        csv_path = os.path.join("csv", csv_name)
-        processed_df.to_csv(csv_path, index=False)
+        sanitized_df = pd.DataFrame(transactions)
+        sanitized_df.to_csv(csv_path, index=False)
         print(f"CSV saved to: {csv_path}")
     except Exception as e:
         print(f"CSV save failed: {e}")
         return ParseResponse(success=False, error=f"CSV save failed: {e}")
 
+    # 5. Run ML analysis on the saved CSV
+    try:
+        analysis = analyze_csv(csv_path)
+        json_path = csv_path.rsplit(".", 1)[0] + ".json"
+    except Exception as e:
+        print(f"Analysis failed: {e}")
+        return ParseResponse(success=False, error=f"Analysis failed: {e}")
+
     return ParseResponse(
         success=True,
-        transactions=transactions,
-        health_score=health,
+        transactions=analysis["transactions"],
+        health_score=analysis["health_score"],
+        category_expense=analysis["category_expense"],
+        income_summary=analysis["income_summary"],
+        recurring_payments=analysis["recurring_payments"],
+        recommendations=analysis["recommendations"],
         csv_path=csv_path,
+        json_path=json_path,
     )
