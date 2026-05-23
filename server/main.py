@@ -1,6 +1,18 @@
-def main():
-    print("Hello from server!")
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+app = FastAPI(title="Financialo API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+@app.get("/")
+def health():
+    return {"status":"Running"}
 
-if __name__ == "__main__":
-    main()
+@app.get("/api/health")
+def health():
+    return {"status": "ok"}
