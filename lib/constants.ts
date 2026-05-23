@@ -72,3 +72,10 @@ export const features=[{
   title:"Recommendation Cards",
   description:"Personalised suggestions to cut unnecessary costs, save more, and optimise your financial habits."
 }]
+
+export const dashboardLinks = [
+  { name: "Dashboard", link: "/dashboard" },
+  { name: "Analytics", link: "/dashboard/analytics" },
+  { name: "Statements", link: "/dashboard/statements" },
+  { name: "Settings", link: "/dashboard/settings" },
+];
