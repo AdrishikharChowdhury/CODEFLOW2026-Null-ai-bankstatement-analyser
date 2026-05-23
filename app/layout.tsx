@@ -1,8 +1,10 @@
+import {ClerkProvider} from "@clerk/nextjs";
+import { shadcn } from '@clerk/ui/themes';
 import type { Metadata } from "next";
 import { Noto_Serif_Hentaigana, Geist } from "next/font/google"
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Navbar from "@/components/Navbar";
+import SyncUser from "@/components/SyncUser";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -22,11 +24,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full w-full", "antialiased", notoSerifHentaigana.variable, "font-sans", geist.variable)}
+      className={cn("h-full w-full scroll-smooth", "antialiased", notoSerifHentaigana.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        {children}
+         <ClerkProvider appearance={{ theme: shadcn }}>
+          <SyncUser />
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );
