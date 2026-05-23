@@ -234,7 +234,7 @@ def _gemini_parse_fallback(all_text):
     """Use Gemini to extract transactions when regex parser finds nothing."""
     prompt = f"""
 Extract all bank transactions from the following statement text.
-Return ONLY a JSON array, no explanation. Each object must have exactly these keys:
+Return ONLY a CSV file, no explanation. Each object must have exactly these keys:
   date (string), description (string), debit (number), credit (number), balance (number)
 Use 0 for missing numeric fields. Example:
 [{{"date":"01/04/2024","description":"UPI payment","debit":500.0,"credit":0.0,"balance":12000.0}}]

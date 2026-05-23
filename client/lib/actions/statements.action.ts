@@ -24,5 +24,26 @@ export async function uploadStatement(formData: FormData) {
     .from("statements")
     .getPublicUrl(fileName);
 
-  return { success: true, url: publicUrl.publicUrl };
+  let data;
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/parse`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        storage_path: fileName,
+        file_name: file.name,
+        file_type: file.name.endsWith(".csv") ? "csv" : "pdf",
+      }),
+    });
+    data = await res.json();
+  } catch (e) {
+    return {
+      success: true,
+      url: publicUrl.publicUrl,
+      data: null,
+      parseError: "FastAPI unavailable",
+    };
+  }
+  console.log('hello')
+  return { success: true, url: publicUrl.publicUrl, data: data };
 }
