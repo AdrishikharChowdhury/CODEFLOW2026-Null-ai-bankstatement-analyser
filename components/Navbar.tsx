@@ -1,7 +1,7 @@
 import { navlinks } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
-import { SignInButton, SignUpButton, Show, UserButton } from '@clerk/nextjs'
+import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
   return (
@@ -15,9 +15,13 @@ const Navbar = () => {
           alt="logo"
         />
       </Link>
-      <ul className="flex justify-centr items-center gap-4">
+      <ul className="flex justify-centr items-center gap-4 md:flex  text-green-pea-300">
         {navlinks.map((link, idx: number) => (
-          <Link href={link.link} key={idx}>
+          <Link
+            href={link.link}
+            key={idx}
+            className="transition-colors hover:text-green-pea-100"
+          >
             <li>{link.name}</li>
           </Link>
         ))}
@@ -37,13 +41,13 @@ const Navbar = () => {
         </Show>
         <Show when="signed-in">
           <UserButton
-  appearance={{
-    elements: {
-      userButtonAvatarBox: "h-12 w-12",   // avatar size
-      userButtonTrigger: "scale-200",      // or scale the whole trigger
-    }
-  }}
-/>
+            appearance={{
+              elements: {
+                userButtonAvatarBox: "h-12 w-12", // avatar size
+                userButtonTrigger: "scale-160", // or scale the whole trigger
+              },
+            }}
+          />
         </Show>
       </div>
     </div>
