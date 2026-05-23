@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <div className="relative z-10 bg-green-pea-1600 mx-6 my-4 rounded-2xl p-5 flex justify-between items-center text-lg border-2 border-green-pea-300 sticky">
+    <div className="relative z-10 bg-green-pea-1600 mx-6 my-4 rounded-2xl p-5 flex justify-between items-center text-lg border-2 border-green-pea-300">
       <Link href="/">
         <Image
           src={"/logo.png"}
