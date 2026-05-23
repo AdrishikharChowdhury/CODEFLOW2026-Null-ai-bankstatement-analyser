@@ -1,10 +1,10 @@
 import DotGrid from "./DotGrid";
 const Banner = () => {
   return (
-    <div className="w-full h-full absolute inset-0">
-      <div className="w-full h-full z-0 relative">
+    <div className="w-full h-screen">
+      <div id="home" className="w-full h-full z-0 relative">
         <DotGrid
-          dotSize={2}
+          dotSize={5}
           gap={15}
           baseColor="#2F293A"
           activeColor="#16e194"
