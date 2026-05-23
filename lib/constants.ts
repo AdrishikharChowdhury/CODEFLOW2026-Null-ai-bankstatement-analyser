@@ -15,28 +15,32 @@ export const team = [
     role: "Team Leader",
     color: "from-green-pea-400 to-green-pea-600",
     initials: "AM",
-    imgPath:"/arjunm.jpeg"
+    imgPath:"/arjunm.jpeg",
+    email:"ec24.arjun.mitra@stcet.ac.in"
   },
   {
     name: "Tanisha Ghosh",
     role: "ML Expert",
     color: "from-green-pea-300 to-green-pea-500",
     initials: "TG",
-    imgPath:"/tanishag.jpeg"
+    imgPath:"/tanishag.jpeg",
+    email:"ec24.tanisha.ghosh@stcet.ac.in"
   },
   {
     name: "Adrishikhar Chowdhury",
     role: "FullStack Dev",
     color: "from-green-pea-500 to-green-pea-700",
     initials: "AC",
-    imgPath:"/ac.jpeg"
+    imgPath:"/ac.jpeg",
+    email:"ec24.adrishikhar.chowdhury@stcet.ac.in"
   },
   {
     name: "Sounak Mal",
     role: "Database Manager",
     color: "from-green-pea-400 to-green-pea-800",
     initials: "SM",
-    imgPath:"/sm.jpeg"
+    imgPath:"/sm.jpeg",
+    email:"ec24.sounak.mal@stcet.ac.in"
   },
 ];
 
