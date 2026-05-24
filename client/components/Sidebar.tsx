@@ -5,9 +5,6 @@ import {
   BarChart3,
   FileText,
   Settings,
-  Wallet,
-  TrendingUp,
-  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
