@@ -3,6 +3,7 @@
 import { PieChart, LineChart, BarChart } from "@mui/x-charts";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import type { CategoryExpense, Transaction, RecurringPayment } from "@/types";
+import { TrendingDown, TrendingUp } from "lucide-react";
 
 interface StatementChartsProps {
   categoryExpense: CategoryExpense[];
@@ -30,7 +31,7 @@ export function StatementCharts({
           <MetricCard
             label="Total Income"
             value={`₹${healthScore.total_income.toLocaleString()}`}
-            color="text-green-pea-100"
+            color="text-green-500"
           />
           <MetricCard
             label="Total Expenses"
@@ -161,7 +162,10 @@ function MetricCard({
   return (
     <div className="bg-green-pea-1900 border border-green-pea-400 rounded-xl p-4 shadow-sm">
       <p className="text-sm text-green-pea-200 mb-1">{label}</p>
-      <p className={`text-2xl font-bold ${color}`}>{value}</p>
+      <p className={`text-2xl font-bold flex gap-2 items-center ${color}`}>{value}
+
+        {label==="Total Income"?<TrendingUp/>:label==="Total Expenses"?<TrendingDown/>:""}
+      </p>
     </div>
   );
 }
