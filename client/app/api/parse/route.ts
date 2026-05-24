@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-type ParseBody = {
-  storage_path: string;
-  file_name: string;
-  file_type: string;
-};
+import type { ParseRequest } from "@/types";
+type ParseBody = ParseRequest;
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body: ParseBody = await req.json();

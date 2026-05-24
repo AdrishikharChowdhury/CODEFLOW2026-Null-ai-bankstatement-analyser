@@ -13,3 +13,7 @@ export function formatTimestamp(
   const date = typeof ts === "string" ? new Date(ts) : ts;
   return date.toLocaleString("en-IN", fmt);
 }
+
+export function formatRedacted(text: string): string {
+  return text.replace(/redact(?:ed)?/gi, "***");
+}
