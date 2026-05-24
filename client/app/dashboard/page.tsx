@@ -1,57 +1,49 @@
-import { getSummaries } from "@/lib/actions/statements.action";
-import { formatTimestamp } from "@/utils/format";
+import { Sidebar } from "@/components/dashboard/Sidebar";
+import { StatementCharts } from "@/components/application/charts/statement-charts";
 import { currentUser } from "@clerk/nextjs/server";
-import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getSummaries } from "@/lib/actions/statements.action";
+import { SelectStatement } from "@/components/SelectStatement";
 
-const page = async () => {
+export default async function DashboardPage() {
   const user = await currentUser();
-  if (!user) throw new Error("Not Authorized");
-  const firstName = user.firstName;
-  const lastName = user.lastName;
-  const statements = await getSummaries(user.id);
-  return (
-    <main className="w-full flex flex-col gap-8 h-full">
-      <p className="w-full text-left">
-        Hello,{" "}
-        <span className="text-2xl text-green-pea-200 font-extrabold">
-          {firstName} {lastName}
-        </span>
-      </p>
-      <div className="flex gap-6 flex-col w-full">
-        {statements.length > 0 ? (
-          <>
-            <h1>Your Statements({statements.length}) </h1>
-            <div className="flex gap-4 w-full">
-              {statements.map((statement, idx) => (
-                <Link key={idx} href={`/dashboard/${statement.id}`}>
-                  <div className="bg-green-pea-1700 p-5 h-50 w-100 rounded-2xl flex flex-col justify-between">
-                    <p className="text-2xl font-semibold">
-                      Statement {idx + 1}
-                    </p>
-                    <p className="text-xl">
-                      <span className="font-bold">Health Label:</span>{" "}
-                      {statement.summary.health_score.health_label}
-                    </p>
-                    <div className="flex flex-col gap-4">
-                      <p className="text-lg">
-                        <span className="font-bold">Created At:</span>{" "}
-                        {formatTimestamp(statement.created_at)}
-                      </p>
-                      <p className="underline self-end text-xs mr-4">
-                        View Details
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </>
-        ) : (
-          <p className="text-4xl font-extralight text-center text-green-pea-400/70" >No Statements Generated</p>
-        )}
-      </div>
-    </main>
-  );
-};
+  if (!user) redirect("/sign-in");
+  const summaries=await getSummaries(user.id);
 
-export default page;
+  // Mock data for demonstration - replace with actual data fetching
+  const mockData = {
+    category_expense: [],
+    transactions: [],
+    recurring_payments: [],
+    health_score: {
+      total_income: 0,
+      total_expense: 0,
+      net_savings: 0,
+      savings_rate: 0,
+      health_label: "No Data",
+    },
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Sidebar />
+      <div className="ml-64 p-8">
+        <div className="max-w-400 mx-auto flex flex-col">
+          <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+          <p className="text-muted-foreground mb-8">
+            Financial Analytics Overview
+          </p>
+          <div className="py-6 self-end">
+            <SelectStatement summaries={summaries} />
+          </div>
+          <StatementCharts
+            categoryExpense={mockData.category_expense}
+            transactions={mockData.transactions}
+            recurringPayments={mockData.recurring_payments}
+            healthScore={mockData.health_score}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
