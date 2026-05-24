@@ -24,7 +24,7 @@ const page = async () => {
             <div className="flex gap-4 w-full">
               {statements.map((statement, idx) => (
                 <Link key={idx} href={`/dashboard/${statement.id}`}>
-                  <div className="bg-green-pea-1000 p-5 h-50 w-100 rounded-2xl flex flex-col justify-between">
+                  <div className="bg-green-pea-1700 p-5 h-50 w-100 rounded-2xl flex flex-col justify-between">
                     <p className="text-2xl font-semibold">
                       Statement {idx + 1}
                     </p>

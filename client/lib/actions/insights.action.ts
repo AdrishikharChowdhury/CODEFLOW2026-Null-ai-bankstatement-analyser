@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import Groq from "groq-sdk";
 import type { SummaryData, Transaction } from "@/types";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -50,6 +51,28 @@ Return ONLY the narrative text, no preamble, no markdown.`,
 
   const content = completion.choices[0]?.message?.content;
   if (!content) throw new Error("No response from Groq");
+
+  const posthog = getPostHogClient();
+  posthog.capture({
+    distinctId: userId,
+    event: "ai_advice_generated",
+    properties: {
+      transaction_count: summaryData.transactions.length,
+      health_label: summaryData.health_score?.health_label ?? null,
+      fraud_alert_count: fraudAlerts.length,
+    },
+  });
+
+  if (fraudAlerts.length > 0) {
+    posthog.capture({
+      distinctId: userId,
+      event: "fraud_alert_detected",
+      properties: {
+        alert_count: fraudAlerts.length,
+        health_label: summaryData.health_score?.health_label ?? null,
+      },
+    });
+  }
 
   return {
     story: content,

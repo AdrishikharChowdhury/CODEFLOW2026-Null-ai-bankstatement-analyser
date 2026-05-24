@@ -1,5 +1,4 @@
-import { features, team } from "@/lib/constants";
-import Image from "next/image";
+import { features } from "@/lib/constants";
 
 const AboutUs = () => {
   return (
