@@ -13,8 +13,8 @@ import { getSummary } from "@/lib/actions/statements.action";
 import { generateStory } from "@/lib/actions/insights.action";
 import { BadgeIndianRupee } from "lucide-react";
 import { formatRedacted, formatTimestamp } from "@/utils/format";
+import { StatementCharts } from "@/components/application/charts/statement-charts";
 import type { SummaryData } from "@/types";
-import { p } from "motion/react-client";
 
 interface DashboardPageProps {
   params: Promise<{ id: string }>;
@@ -53,6 +53,12 @@ const page = async ({ params }: DashboardPageProps) => {
           {formatTimestamp(created_at)}
         </p>
       </div>
+      <StatementCharts
+        categoryExpense={category_expense}
+        transactions={transactions}
+        recurringPayments={recurring_payments}
+        healthScore={summary.health_score}
+      />
       <div className="flex flex-col gap-4">
         <h2>AI Category of expenses</h2>
         <Table>
@@ -163,7 +169,7 @@ const page = async ({ params }: DashboardPageProps) => {
       <div className="flex flex-col gap-4">
         <h2>AI Advice: </h2>
       {story && (
-        <div className="bg-green-pea-1900 border border-green-200 rounded-lg p-6 whitespace-pre-line leading-relaxed">
+        <div className="bg-green-pea-1900 border border-green-pea-400 rounded-lg p-6 whitespace-pre-line text-green-pea-50 leading-relaxed">
           {story}
         </div>
       )}
@@ -173,7 +179,7 @@ const page = async ({ params }: DashboardPageProps) => {
             <p key={i} className="text-red-700 font-medium">{a}</p>
           ))}
         </div>
-      ):<p className="bg-green-pea-1900 border border-green-200 rounded-lg p-6 whitespace-pre-line text-green-pea-100 leading-relaxed " >Good News No Fraud has been detected</p>}
+      ):<p className="bg-green-pea-1900 border border-green-pea-400 rounded-lg p-6 whitespace-pre-line text-green-pea-100 leading-relaxed" >Good News No Fraud has been detected</p>}
       </div>
       </div>
     </main>
