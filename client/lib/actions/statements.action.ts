@@ -44,6 +44,17 @@ export async function uploadStatement(formData: FormData) {
       parseError: "FastAPI unavailable",
     };
   }
-  console.log('hello')
-  return { success: true, url: publicUrl.publicUrl, data: data };
+  return { success: true, url: publicUrl.publicUrl, data };
 }
+
+export const getSummaries = async (userId: string) => {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from("statements")
+    .select("summary,id,created_at")
+    .order("created_at", { ascending: false })
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
+  return data;
+};

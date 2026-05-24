@@ -13,6 +13,7 @@ class ParseRequest(BaseModel):
     storage_path: str
     file_name: str
     file_type: str  # "pdf" or "csv"
+
 class ParseResponse(BaseModel):
     success: bool
     transactions: list | None = None
@@ -105,6 +106,17 @@ def parse_statement(req: ParseRequest):
     except Exception as e:
         print(f"Analysis failed: {e}")
         return ParseResponse(success=False, error=f"Analysis failed: {e}")
+
+    # 6. Store analysis in statements table
+    try:
+        user_id = req.storage_path.split("/")[0]
+        supabase.table("statements").insert({
+            "user_id": user_id,
+            "summary": analysis,
+        }).execute()
+        print(f"Analysis stored in statements table")
+    except Exception as e:
+        print(f"Database save failed: {e}")
 
     return ParseResponse(
         success=True,
