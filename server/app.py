@@ -7,7 +7,9 @@ import pdfplumber
 import torch
 import joblib  # Used to deserialize your custom LightGBM Classifier package safely
 import re
+import os
 from io import BytesIO
+from dotenv import load_dotenv
 
 st.set_page_config(page_title="FinGuard AI Pro: Multi-Model Analytics Suite", layout="wide")
 
@@ -38,7 +40,7 @@ def load_ai_models():
     return setfit_brain, lgb_classifier, f"{s1} | {s2} ({device.upper()})"
 
 setfit_model, lgb_model, models_status_log = load_ai_models()
-genai.configure(api_key="AIzaSyDZNuOOl8cAWhpE2PRpjRHgZufKjlk3RZc")
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 # --- 2. MULTI-LINE RESILIENT PDF PARSER ---
 DATE_PATTERN = re.compile(

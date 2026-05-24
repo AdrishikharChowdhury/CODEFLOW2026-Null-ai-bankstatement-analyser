@@ -22,9 +22,10 @@ export function StatementUpload() {
 
     const result = await uploadStatement(formData);
 
+    const hasError = "error" in result;
     setFile((prev) =>
       prev?.file === dropped
-        ? { ...prev, progress: result.error ? 0 : 100, failed: !!result.error }
+        ? { ...prev, progress: hasError ? 0 : 100, failed: hasError }
         : prev,
     );
   }, []);
