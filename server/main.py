@@ -5,7 +5,7 @@ from db import supabase
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 from sanitization import sanitize
-from parser import extract_rows_from_pdf, self_healing_normalization, compute_financial_health
+from parser import extract_rows_from_pdf, self_healing_normalization, compute_financial_health, normalize_csv_columns
 from analyzer import analyze_csv
 from pydantic import BaseModel
 
@@ -64,6 +64,7 @@ def parse_statement(req: ParseRequest):
     try:
         if req.file_type == "csv":
             raw_df = pd.read_csv(buffer)
+            raw_df = normalize_csv_columns(raw_df)
         else:
             buffer.name = req.file_name
             raw_df = extract_rows_from_pdf(buffer)

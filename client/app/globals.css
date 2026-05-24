@@ -6,26 +6,26 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --green-pea-50: #c4fde1;
-  --green-pea-100: #53f7b8;
-  --green-pea-200: #46d59e;
-  --green-pea-300: #3bb788;
-  --green-pea-400: #319c73;
-  --green-pea-500: #288360;
-  --green-pea-600: #1f6b4e;
-  --green-pea-700: #1c6449;
-  --green-pea-800: #195a41;
-  --green-pea-900: #155039;
-  --green-pea-1000: #134a35;
-  --green-pea-1100: #114531;
-  --green-pea-1200: #0f3f2c;
-  --green-pea-1300: #0c3928;
-  --green-pea-1400: #0a3323;
-  --green-pea-1500: #082d1f;
-  --green-pea-1600: #06271a;
-  --green-pea-1700: #052116;
-  --green-pea-1800: #031b11;
-  --green-pea-1900: #02140c;
+  --green-pea-50: #ffffff;
+  --green-pea-100: #b7ffae;
+  --green-pea-200: #8eff7d;
+  --green-pea-300: #7aff66;
+  --green-pea-400: #65ff4d;
+  --green-pea-500: #67f752;
+  --green-pea-600: #67ea54;
+  --green-pea-700: #64da54;
+  --green-pea-800: #61c852;
+  --green-pea-900: #5cb54f;
+  --green-pea-1000: #58ac4c;
+  --green-pea-1100: #539f48;
+  --green-pea-1200: #4c9142;
+  --green-pea-1300: #44833b;
+  --green-pea-1400: #3b7333;
+  --green-pea-1500: #32642b;
+  --green-pea-1600: #275321;
+  --green-pea-1700: #1d4218;
+  --green-pea-1800: #11300d;
+  --green-pea-1900: #0c2308;
 
   --background: var(--green-pea-1900);
   --foreground: var(--green-pea-50);

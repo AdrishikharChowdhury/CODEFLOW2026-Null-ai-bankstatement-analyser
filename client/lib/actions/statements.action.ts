@@ -42,7 +42,7 @@ export async function uploadStatement(
       }),
     });
     data = await res.json();
-  } catch (e) {
+  } catch {
     return {
       success: true,
       url: publicUrl.publicUrl,

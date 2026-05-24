@@ -11,6 +11,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { getSummary } from "@/lib/actions/statements.action";
 import { generateStory } from "@/lib/actions/insights.action";
+import { getPostHogClient } from "@/lib/posthog-server";
 import { BadgeIndianRupee } from "lucide-react";
 import { formatRedacted, formatTimestamp } from "@/utils/format";
 import { StatementCharts } from "@/components/application/charts/statement-charts";
@@ -33,6 +34,17 @@ const page = async ({ params }: DashboardPageProps) => {
     recurring_payments,
     recommendations,
   } = summary;
+
+  const posthog = getPostHogClient();
+  posthog.capture({
+    distinctId: user.id,
+    event: "statement_viewed",
+    properties: {
+      statement_id: id,
+      health_label: summary.health_score?.health_label ?? null,
+      transaction_count: transactions.length,
+    },
+  });
 
   let story = "";
   let fraudAlerts: string[] = [];

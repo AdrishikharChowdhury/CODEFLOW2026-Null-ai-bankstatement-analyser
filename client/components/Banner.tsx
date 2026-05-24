@@ -6,8 +6,8 @@ const Banner = () => {
         <DotGrid
           dotSize={5}
           gap={15}
-          baseColor="#2F293A"
-          activeColor="#16e194"
+          baseColor="#1A1A1A"
+          activeColor="#F0EC07"
           proximity={120}
           shockRadius={250}
           shockStrength={5}
