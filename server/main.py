@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 from sanitization import sanitize
 from parser import extract_rows_from_pdf, self_healing_normalization, compute_financial_health, normalize_csv_columns, parse_text_to_df
-from pdf_ocr import extract_text_with_ocr
 from analyzer import analyze_csv
 from pydantic import BaseModel
 
@@ -70,16 +69,6 @@ def parse_statement(req: ParseRequest):
             buffer.name = req.file_name
             raw_df = extract_rows_from_pdf(buffer)
             
-            # FALLBACK: If standard parsing fails, try OCR
-            if raw_df.empty:
-                print("Standard parsing failed or returned no results. Trying PaddleOCR fallback...")
-                buffer.seek(0)
-                pdf_bytes = buffer.read()
-                ocr_text = extract_text_with_ocr(pdf_bytes)
-                if ocr_text:
-                    print("OCR successful, parsing extracted text...")
-                    raw_df = parse_text_to_df(ocr_text)
-                    
         if raw_df.empty:
             return ParseResponse(success=False, error="No transactions could be parsed")
     except Exception as e:
@@ -142,3 +131,9 @@ def parse_statement(req: ParseRequest):
         csv_path=csv_path,
         json_path=json_path,
     )
+    
+if __name__ == "__main__":
+   import uvicorn
+   import os
+   port = int(os.environ.get("PORT", 8000))
+   uvicorn.run(app, host="0.0.0.0", port=port)
