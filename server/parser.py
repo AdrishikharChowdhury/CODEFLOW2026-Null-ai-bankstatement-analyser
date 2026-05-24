@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ── Optional Gemini client for translation ──
+# ── Optional Gemini client ──
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 gemini_client = None
 if GEMINI_API_KEY:
@@ -161,33 +161,7 @@ def _extract_table_blocks(page):
     return blocks
 
 
-def _gemini_parse_fallback(all_text):
-    if not gemini_client:
-        return pd.DataFrame()
-    prompt = f"""
-Extract all bank transactions from the following statement text.
-Return ONLY a JSON array, no explanation. Each object must have exactly these keys:
-  date (string), description (string), debit (number), credit (number), balance (number)
-Use 0 for missing numeric fields. Example:
-[{{"date":"01/04/2024","description":"UPI payment","debit":500.0,"credit":0.0,"balance":12000.0}}]
-
-Statement text:
-{all_text[:12000]}
-"""
-    try:
-        response = gemini_client.models.generate_content(
-            model="gemini-1.5-flash", contents=prompt
-        )
-        raw = response.text.strip()
-        raw = re.sub(r'^```[a-z]*\n?', '', raw).rstrip('`').strip()
-        import json
-        records = json.loads(raw)
-        return pd.DataFrame(records)
-    except Exception:
-        return pd.DataFrame()
-
-
-# ── Main PDF parser ──────────────────────────────────────────────────────
+# ── Main PDF parser (returns just df) ────────────────────────────────────
 
 def extract_rows_from_pdf(pdf_buffer):
     parsed_transactions = []
@@ -217,58 +191,44 @@ def extract_rows_from_pdf(pdf_buffer):
     return df
 
 
-# ── Normalization & enrichment ──────────────────────────────────────────
+# ── Gemini fallback ───────────────────────────────────────────────────────
+
+def _gemini_parse_fallback(all_text):
+    if not gemini_client:
+        return pd.DataFrame()
+    prompt = f"""
+Extract all bank transactions from the following statement text.
+Return ONLY a JSON array, no explanation. Each object must have exactly these keys:
+  date (string), description (string), debit (number), credit (number), balance (number)
+Use 0 for missing numeric fields. Example:
+[{{"date":"01/04/2024","description":"UPI payment","debit":500.0,"credit":0.0,"balance":12000.0}}]
+
+Statement text:
+{all_text[:12000]}
+"""
+    try:
+        response = gemini_client.models.generate_content(
+            model="gemini-1.5-flash", contents=prompt
+        )
+        raw = response.text.strip()
+        raw = re.sub(r'^```[a-z]*\n?', '', raw).rstrip('`').strip()
+        import json
+        records = json.loads(raw)
+        return pd.DataFrame(records)
+    except Exception:
+        return pd.DataFrame()
+
+
+# ── Normalization ─────────────────────────────────────────────────────────
 
 def self_healing_normalization(df_raw):
     df = df_raw.copy()
-    df.columns = [str(col).strip().lower() for col in df.columns]
-
-    rename_map = {
-        "narration": "description",
-        "particulars": "description",
-        "transaction remarks": "description",
-        "withdrawal": "debit",
-        "amount (dr.)": "debit",
-        "dr": "debit",
-        "deposit": "credit",
-        "amount (cr.)": "credit",
-        "cr": "credit",
-        "closing balance": "balance",
-        "bal": "balance",
-    }
-    df = df.rename(columns={key: value for key, value in rename_map.items() if key in df.columns})
-
-    def column_or_default(name, default):
-        if name in df.columns:
-            return df[name]
-        return pd.Series([default] * len(df), index=df.index)
-
-    def numeric_column(name):
-        values = column_or_default(name, 0.0).astype(str).str.replace(r'[^\d.-]', '', regex=True)
-        return pd.to_numeric(values, errors='coerce').fillna(0.0)
-
-    df['debit_value'] = numeric_column('debit')
-    df['credit_value'] = numeric_column('credit')
-    df['balance_value'] = numeric_column('balance')
-    df['clean_description'] = column_or_default('description', "transaction").astype(str).fillna("transaction")
-    df['transaction_date'] = pd.to_datetime(column_or_default('date', pd.NaT), errors='coerce', dayfirst=True)
-
-    def translate_if_needed(text):
-        if re.search(r'[^\x00-\x7F]', text) and gemini_client:
-            try:
-                resp = gemini_client.models.generate_content(
-                    model="gemini-1.5-flash",
-                    contents=f"Translate this bank transaction description to English. Return only the translated text, nothing else: {text}",
-                )
-                return resp.text.strip()
-            except Exception:
-                pass
-        return text
-
-    df['clean_description'] = df['clean_description'].apply(translate_if_needed)
-
+    df['debit_value'] = pd.to_numeric(df['debit'], errors='coerce').fillna(0.0)
+    df['credit_value'] = pd.to_numeric(df['credit'], errors='coerce').fillna(0.0)
+    df['balance_value'] = pd.to_numeric(df['balance'], errors='coerce').fillna(0.0)
+    df['clean_description'] = df['description'].astype(str).fillna("transaction")
     df['clean_description'] = df['clean_description'].apply(
-        lambda x: re.sub(r'[^a-zA-Z\s]', ' ', x.lower()).replace('wdl', '').replace('tfr', '').strip()
+        lambda x: re.sub(r'[^a-zA-Z\s]', ' ', x.lower()).strip()
     )
     df['transaction_type'] = np.where(
         df['credit_value'] > df['debit_value'],
@@ -276,6 +236,10 @@ def self_healing_normalization(df_raw):
         np.where(df['debit_value'] > 0, "Expense", "Balance Update")
     )
     df['transaction_amount'] = df[['debit_value', 'credit_value']].max(axis=1)
+    df['transaction_date'] = pd.to_datetime(
+        df.get('date', pd.Series([pd.NaT] * len(df), index=df.index)),
+        errors='coerce', dayfirst=True
+    )
     return df
 
 
@@ -349,8 +313,6 @@ def identify_recurring_payments(df):
     return recurring
 
 
-# ── Financial health ─────────────────────────────────────────────────────
-
 def compute_financial_health(df):
     total_income = df['credit_value'].sum()
     total_expense = df['debit_value'].sum()
@@ -408,3 +370,55 @@ def local_recommendations(health, category_expense, recurring):
 
     recommendations.append("Maintain an emergency buffer of at least 3 months of average expenses before increasing discretionary purchases.")
     return recommendations
+
+
+# ── Chart data preparation (from app.py) ────────────────────────────────
+
+def prepare_expense_pie_data(df):
+    expense_df = df[df["debit_value"] > 0].copy()
+    if expense_df.empty:
+        return []
+    pie_data = (
+        expense_df.groupby("ai_category", as_index=False)["debit_value"]
+        .sum()
+        .sort_values(by="debit_value", ascending=False)
+    )
+    return pie_data.to_dict(orient="records")
+
+
+def prepare_balance_timeline(df):
+    df_sorted = df.sort_values("transaction_date").reset_index(drop=True)
+    timeline = df_sorted[["transaction_date", "balance_value"]].copy()
+    timeline["transaction_date"] = timeline["transaction_date"].dt.strftime("%d-%b-%Y")
+    return timeline.to_dict(orient="records")
+
+
+def compute_diagnostic_metrics(df):
+    total_income = float(df["credit_value"].sum())
+    total_expense = float(df["debit_value"].sum())
+    net_savings = total_income - total_expense
+
+    calc_risk = 5.0
+    fraud_alerts = []
+    large_spikes = df[df["debit_value"] > 15000]
+    if not large_spikes.empty:
+        calc_risk += 35.0
+        for _, r in large_spikes.iterrows():
+            fraud_alerts.append(
+                f"Large outflow of Rs. {r['debit_value']:,.0f} detected."
+            )
+    fraud_prob = min(calc_risk, 100.0)
+
+    loan_ratio = 0.0  # not derivable without metadata
+    simulated_credit = 750 + int((net_savings / total_income * 50)) if total_income > 0 else 680
+    simulated_credit = max(min(simulated_credit, 850), 300)
+    health_score = int(((simulated_credit - 300) / 550) * 100)
+
+    return {
+        "health_score": health_score,
+        "credit_score": simulated_credit,
+        "fraud_probability": round(fraud_prob, 1),
+        "fraud_alerts": fraud_alerts,
+        "loan_burden_ratio": round(loan_ratio, 1),
+    }
+

@@ -2,8 +2,14 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { createSupabaseClient } from "@/utils/supabase";
+import type { ParseResponse, SummaryData } from "@/types";
 
-export async function uploadStatement(formData: FormData) {
+export async function uploadStatement(
+  formData: FormData
+): Promise<
+  | { error: string }
+  | { success: true; url: string; data: ParseResponse | null; parseError?: string }
+> {
   const { userId } = await auth();
   if (!userId) return { error: "Not authenticated" };
 
@@ -24,7 +30,7 @@ export async function uploadStatement(formData: FormData) {
     .from("statements")
     .getPublicUrl(fileName);
 
-  let data;
+  let data: ParseResponse | null = null;
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/parse`, {
       method: "POST",
@@ -47,7 +53,11 @@ export async function uploadStatement(formData: FormData) {
   return { success: true, url: publicUrl.publicUrl, data };
 }
 
-export const getSummaries = async (userId: string) => {
+export const getSummaries = async (
+  userId: string
+): Promise<
+  { summary: SummaryData; id: string; created_at: string }[]
+> => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("statements")
@@ -56,5 +66,20 @@ export const getSummaries = async (userId: string) => {
     .eq("user_id", userId);
 
   if (error) throw new Error(error.message);
-  return data;
+  return data as { summary: SummaryData; id: string; created_at: string }[];
+};
+
+export const getSummary = async (
+  userId: string,
+  id: string
+): Promise<{ summary: SummaryData; created_at: string }> => {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from("statements")
+    .select("summary,created_at")
+    .eq("user_id", userId)
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+  return data[0] as { summary: SummaryData; created_at: string };
 };
