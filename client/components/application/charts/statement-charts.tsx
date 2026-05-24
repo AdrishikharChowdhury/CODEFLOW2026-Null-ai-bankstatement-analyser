@@ -4,8 +4,6 @@ import { PieChart, LineChart, BarChart } from "@mui/x-charts";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import type { CategoryExpense, Transaction, RecurringPayment } from "@/types";
 
-const darkChartTheme = createTheme({ palette: { mode: "dark" } });
-
 interface StatementChartsProps {
   categoryExpense: CategoryExpense[];
   transactions: Transaction[];
@@ -26,7 +24,6 @@ export function StatementCharts({
   healthScore,
 }: StatementChartsProps) {
   return (
-    <ThemeProvider theme={darkChartTheme}>
       <div className="flex flex-col gap-6">
         {/* Metric cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -149,7 +146,6 @@ export function StatementCharts({
           </div>
         )}
       </div>
-    </ThemeProvider>
   );
 }
 

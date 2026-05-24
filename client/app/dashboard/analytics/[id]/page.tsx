@@ -18,26 +18,28 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { SelectStatement } from "@/components/SelectStatement";
-import { getSummaries } from "@/lib/actions/statements.action";
+import { getSummaries, getSummary } from "@/lib/actions/statements.action";
 import { SelectStatementAnalytical } from "@/components/SelectStatementAnalytical";
 
-export default async function AnalyticsPage() {
+interface AnalyticsPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function page({ params }: AnalyticsPageProps) {
   const user = await currentUser();
   if (!user) redirect("/sign-in");
   const summaries=await getSummaries(user.id);
+  const { id } = await params;
 
-  // Mock data for demonstration - replace with actual data fetching
-  const mockData = {
-    category_expense: [],
-    transactions: [],
-    recurring_payments: [],
-    recommendations: [],
-  };
+  const { summary, created_at } = await getSummary(user.id, id);
+  const {
+    transactions,
+    category_expense,
+    recurring_payments,
+  } = summary;
 
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar />
       
       <div className="ml-64 p-8">
         <div className="max-w-400 mx-auto flex flex-col">
@@ -62,8 +64,8 @@ export default async function AnalyticsPage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {mockData.category_expense.length > 0 ? (
-                          mockData.category_expense.map((category: any, idx: number) => (
+                        {category_expense.length > 0 ? (
+                          category_expense.map((category: any, idx: number) => (
                             <TableRow key={idx}>
                               <TableCell className="text-left">{idx + 1}</TableCell>
                               <TableCell>{category.ai_category}</TableCell>
@@ -105,8 +107,8 @@ export default async function AnalyticsPage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {mockData.recurring_payments.length > 0 ? (
-                          mockData.recurring_payments.map((payment: any, idx: number) => (
+                        {recurring_payments.length > 0 ? (
+                          recurring_payments.map((payment: any, idx: number) => (
                             <TableRow key={idx}>
                               <TableCell className="font-medium">{idx + 1}</TableCell>
                               <TableCell>{formatRedacted(payment.merchant)}</TableCell>
@@ -150,8 +152,8 @@ export default async function AnalyticsPage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {mockData.transactions.length > 0 ? (
-                          mockData.transactions.map((transaction: any, idx: number) => (
+                        {transactions.length > 0 ? (
+                          transactions.map((transaction: any, idx: number) => (
                             <TableRow key={idx}>
                               <TableCell className="font-medium">
                                 {transaction.date}
