@@ -26,7 +26,7 @@ export function BudgetMetricCards({ budget, totalExpense }: BudgetMetricCardsPro
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map((card) => {
         const overBudget = card.actual > card.budget;
-        const diff = Math.abs(card.actual - card.budget);
+        const diff = Math.abs(card.budget-card.actual);
 
         return (
           <div
@@ -38,17 +38,17 @@ export function BudgetMetricCards({ budget, totalExpense }: BudgetMetricCardsPro
               {overBudget ? (
                 <TrendingDown className="size-5 text-destructive shrink-0" />
               ) : (
-                <TrendingUp className="size-5 text-green-pea-100 shrink-0" />
+                <TrendingUp className="size-5 text-green-600 shrink-0" />
               )}
               <span
                 className={`text-xl font-bold ${
-                  overBudget ? "text-destructive" : "text-green-pea-100"
+                  overBudget ? "text-destructive" : "text-green-600"
                 }`}
               >
-                {overBudget ? `+₹${diff.toLocaleString("en-IN")}` : `-₹${diff.toLocaleString("en-IN")}`}
+                {overBudget ? `-₹${diff.toLocaleString("en-IN")}` : `+₹${diff.toLocaleString("en-IN")}`}
               </span>
             </div>
-            <div className="flex justify-between text-xs text-muted-foreground">
+            <div className="flex justify-between text-xs">
               <span>Budget: ₹{card.budget.toLocaleString("en-IN")}</span>
               <span>Spent: ₹{card.actual.toLocaleString("en-IN")}</span>
             </div>

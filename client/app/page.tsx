@@ -12,7 +12,7 @@ const page = () => {
       <section>
         <AboutUs />
       </section>
-      <section className="bg-green-pea-1600">
+      <section>
         <ContactUs />
       </section>
       <Footer />

@@ -161,6 +161,22 @@ def _extract_table_blocks(page):
     return blocks
 
 
+def parse_text_to_df(text):
+    """
+    Parses raw text into a DataFrame of transactions using text block extraction and parsing logic.
+    """
+    blocks = _extract_text_blocks(text)
+    parsed_transactions = []
+    for block in blocks:
+        transaction = _parse_transaction_block(block)
+        if transaction:
+            parsed_transactions.append(transaction)
+    
+    df = pd.DataFrame(parsed_transactions).drop_duplicates()
+    if df.empty and text.strip():
+        df = _gemini_parse_fallback(text)
+    return df
+
 # ── Main PDF parser (returns just df) ────────────────────────────────────
 
 def extract_rows_from_pdf(pdf_buffer):
