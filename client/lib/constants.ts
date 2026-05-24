@@ -13,7 +13,7 @@ export const team = [
   {
     name: "Arjun Mitra",
     role: "Team Leader",
-    color: "from-green-pea-400 to-green-pea-600",
+    color: "from-chart-400 to-chart-600",
     initials: "AM",
     imgPath:"/arjunm.jpeg",
     email:"ec24.arjun.mitra@stcet.ac.in"
@@ -21,7 +21,7 @@ export const team = [
   {
     name: "Tanisha Ghosh",
     role: "ML Expert",
-    color: "from-green-pea-300 to-green-pea-500",
+    color: "from-chart-300 to-chart-500",
     initials: "TG",
     imgPath:"/tanishag.jpeg",
     email:"ec24.tanisha.ghosh@stcet.ac.in"
@@ -29,7 +29,7 @@ export const team = [
   {
     name: "Adrishikhar Chowdhury",
     role: "FullStack Dev",
-    color: "from-green-pea-500 to-green-pea-700",
+    color: "from-chart-500 to-chart-700",
     initials: "AC",
     imgPath:"/ac.jpeg",
     email:"ec24.adrishikhar.chowdhury@stcet.ac.in"
@@ -37,7 +37,7 @@ export const team = [
   {
     name: "Sounak Mal",
     role: "Database Manager",
-    color: "from-green-pea-400 to-green-pea-800",
+    color: "from-chart-400 to-chart-800",
     initials: "SM",
     imgPath:"/sm.jpeg",
     email:"ec24.sounak.mal@stcet.ac.in"

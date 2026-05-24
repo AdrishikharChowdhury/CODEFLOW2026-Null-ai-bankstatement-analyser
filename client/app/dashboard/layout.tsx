@@ -1,14 +1,15 @@
 import { Sidebar } from "@/components/Sidebar";
+import Chatbot from "@/components/Chatbot";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-     <Sidebar />
+    
 
-      <div className="flex-1">
-        
+      <div className="flex-1 relative"> <Sidebar />
         {children}
-        </div>
+        <Chatbot />
+      </div>
     </>
   )
 }

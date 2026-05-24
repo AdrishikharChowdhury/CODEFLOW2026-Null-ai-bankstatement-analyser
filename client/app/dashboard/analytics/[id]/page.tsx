@@ -76,13 +76,6 @@ const page = async ({ params }: DashboardPageProps) => {
           <div className="py-6 self-end">
             <SelectStatementAnalytical summaries={summaries} />
           </div>
-
-          {budget && (
-            <div className="mb-6">
-              <BudgetMetricCards budget={budget} totalExpense={totalExpense} />
-            </div>
-          )}
-
           <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center gap-6">
               <h1 className="text-center">Statement Summary</h1>
@@ -91,6 +84,9 @@ const page = async ({ params }: DashboardPageProps) => {
                 {formatTimestamp(created_at)}
               </p>
             </div>
+            {budget && (
+            <BudgetMetricCards budget={budget} totalExpense={totalExpense} />
+          )}
             <StatementCharts
               categoryExpense={category_expense}
               transactions={transactions}
@@ -108,7 +104,7 @@ const page = async ({ params }: DashboardPageProps) => {
               <div className="flex flex-col gap-4">
                 <h2>AI Advice: </h2>
                 {story && (
-                  <div className="bg-green-pea-1900 border border-green-pea-400 rounded-lg p-6 whitespace-pre-line text-green-pea-50 leading-relaxed">
+                  <div className="bg-card border border-border rounded-lg p-6 whitespace-pre-line text-foreground leading-relaxed">
                     {story}
                   </div>
                 )}
@@ -119,7 +115,7 @@ const page = async ({ params }: DashboardPageProps) => {
                     ))}
                   </div>
                 ) : (
-                  <p className="bg-green-pea-1900 border border-green-pea-400 rounded-lg p-6 whitespace-pre-line text-green-pea-100 leading-relaxed">
+                  <p className="bg-card border border-border rounded-lg p-6 whitespace-pre-line text-muted-foreground leading-relaxed">
                     Good News No Fraud has been detected
                   </p>
                 )}

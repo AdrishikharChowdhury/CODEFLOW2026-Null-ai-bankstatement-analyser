@@ -10,8 +10,6 @@ import re
 import os
 from io import BytesIO
 from dotenv import load_dotenv
-from pdf_ocr import extract_text_with_ocr
-import fitz
 
 st.set_page_config(page_title="FinGuard AI Pro: Multi-Model Analytics Suite", layout="wide")
 
@@ -474,15 +472,6 @@ def extract_rows_from_pdf(pdf_buffer):
     with pdfplumber.open(BytesIO(pdf_bytes)) as pdf:
         page_texts = [page.extract_text() or "" for page in pdf.pages]
         full_text = "\n".join(page_texts).strip()
-
-        # FALLBACK: If text extraction is poor (scanned PDF), use PaddleOCR
-        if len(full_text) < 150:
-            try:
-                full_text = extract_text_with_ocr(pdf_bytes)
-            except Exception as e:
-                st.error(f"OCR Error: {e}")
-                print(f"PaddleOCR fallback failed: {e}")
-
         metadata = extract_statement_metadata(full_text)
         metadata["page_count"] = len(pdf.pages)
 

@@ -4,69 +4,83 @@ import Image from "next/image";
 
 const ContactUs = () => {
   return (
-    <main
-      className="w-full min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-20 bg-green-pea-1600"
+    <section
+      className="w-full min-h-screen flex flex-col items-center justify-center gap-12 px-6 py-24 bg-background relative overflow-hidden"
       id="contact-us"
     >
-        <h2 className="text-5xl font-bold tracking-tight">Contact Us</h2>
-      <div className="flex lg:flex-row gap-16 w-full max-w-6xl h-full items-center">
-        
-        <div className="flex flex-col gap-4 text-center lg:text-left max-w-xl h-full">
-          <p className="text-green-pea-200 text-lg/12 tracking-widest text-center">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+
+      <div className="flex flex-col items-center gap-4 text-center">
+        <div className="inline-block px-4 py-1.5 text-sm font-semibold tracking-wide text-primary uppercase bg-primary/10 rounded-full">
+          Get In Touch
+        </div>
+        <h2 className="text-5xl font-bold tracking-tight text-foreground">Contact Us</h2>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-16 w-full max-w-6xl items-center relative z-10">
+        <div className="flex flex-col gap-6 text-center lg:text-left max-w-xl">
+          <p className="text-muted-foreground text-lg leading-relaxed">
             We are always open to questions, collaborations, or just a friendly
             conversation. Whether you have feedback about Financialo, want to
             report an issue, or are interested in contributing to the project —
             do not hesitate to reach out.
           </p>
-          
-          <p className="text-green-pea-200 text-base/10 tracking-widest text-center">
+          <p className="text-muted-foreground text-lg leading-relaxed">
             Each member of Team Null brings unique expertise — from machine
             learning and full-stack development to database architecture and
             team leadership. We are passionate about building tools that make
             financial data accessible to everyone.
           </p>
-          <p className="text-green-pea-300 text-base/8 tracking-widest text-center">
-            Click the mail icon on any team member&apos;s card below to send a
-            direct message. We typically respond within 24 hours.
-          </p>
+          <div className="flex items-center gap-4 justify-center lg:justify-start mt-4">
+            <div className="flex -space-x-3">
+              {team.map((member) => (
+                <div key={member.name} className="w-10 h-10 rounded-full border-2 border-background overflow-hidden">
+                   <Image src={member.imgPath} width={40} height={40} className="object-cover h-full w-full" alt={member.name} />
+                </div>
+              ))}
+            </div>
+            <p className="text-sm font-medium text-muted-foreground">Trusted by developers worldwide</p>
+          </div>
         </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-lg">
-        {team.map((member) => (
-          <div
-            key={member.name}
-            className="group flex flex-col items-center gap-4 rounded-2xl border border-green-pea-700 bg-green-pea-1800/60 p-8 transition-all duration-300 hover:border-green-pea-400 hover:shadow-[0_0_30px_-8px] hover:shadow-green-pea-400/30 justify-between"
-          >
-            <div className="aspect-square w-28 overflow-hidden rounded-full border-2 border-green-pea-600 transition-transform duration-300 group-hover:scale-105">
-              <Image
-                src={member.imgPath}
-                width={112}
-                height={112}
-                className="object-cover h-full w-full"
-                alt={member.name}
-              />
-            </div>
-
-            <div className="flex flex-col items-center gap-1 text-center">
-              <h3 className="text-lg font-semibold text-green-pea-50">
-                {member.name}
-              </h3>
-              <p className="text-sm font-medium text-green-pea-400">
-                {member.role}
-              </p>
-            </div>
-
-            <a
-              href={`mailto:${member.email}`}
-              className="flex items-center justify-center rounded-full border border-green-pea-600 p-3 text-green-pea-400 transition-colors hover:border-green-pea-400 hover:bg-green-pea-800/50 hover:text-green-pea-100"
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-lg">
+          {team.map((member) => (
+            <div
+              key={member.name}
+              className="group flex flex-col items-center gap-4 rounded-2xl border border-border bg-card/50 backdrop-blur-sm p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:bg-card justify-between"
             >
-              <Mail className="h-5 w-5" />
-            </a>
-          </div>
-        ))}
+              <div className="aspect-square w-28 overflow-hidden rounded-full border-2 border-primary/20 p-1 transition-transform duration-300 group-hover:scale-105 group-hover:border-primary/50">
+                <Image
+                  src={member.imgPath}
+                  width={112}
+                  height={112}
+                  className="object-cover h-full w-full rounded-full"
+                  alt={member.name}
+                />
+              </div>
+
+              <div className="flex flex-col items-center gap-1 text-center">
+                <h3 className="text-lg font-bold text-foreground">
+                  {member.name}
+                </h3>
+                <p className="text-sm font-medium text-primary">
+                  {member.role}
+                </p>
+              </div>
+
+              <a
+                href={`mailto:${member.email}`}
+                className="flex items-center justify-center rounded-xl bg-primary/10 p-3 text-primary transition-all hover:bg-primary hover:text-primary-foreground"
+              >
+                <Mail className="h-5 w-5" />
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
-      </div>
-    </main>
+    </section>
   );
 };
 

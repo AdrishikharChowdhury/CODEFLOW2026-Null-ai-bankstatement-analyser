@@ -102,9 +102,9 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="ml-64 p-8">
-        <div className="max-w-md mx-auto">
+    <div className="h-screen bg-background">
+      <div className="h-full ml-64 p-8 flex justify-center items-center">
+        <div className="max-w-md mx-auto flex h-full justify-center items-center flex-col">
           <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
           <p className="text-muted-foreground mb-8">
             Set your daily, weekly, monthly &amp; yearly budget limits

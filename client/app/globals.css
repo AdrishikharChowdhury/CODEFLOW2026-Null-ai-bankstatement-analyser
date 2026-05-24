@@ -6,79 +6,69 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Main warm canvas from image.jpg */
-  --background: 45 12% 95%;     /* #F4F3EF */
-  --foreground: 20 14% 4%;
+  /* Zinc-based palette */
+  --background: 210 40% 98%;         /* light blue-ish white */
+  --foreground: 222.2 47.4% 11.2%;   /* slate-950 */
 
-  /* Crisp white for floating dashboard cards */
   --card: 0 0% 100%;
-  --card-foreground: 20 14% 4%;
+  --card-foreground: 222.2 47.4% 11.2%;
 
-  /* Dark Sidebar definitions */
-  --sidebar-background: 0 0% 12%; /* #1E1E1E */
-  --sidebar-foreground: 0 0% 98%;
+  --sidebar-background: 222.2 47.4% 11.2%; 
+  --sidebar-foreground: 210 40% 98%;
 
-  /* Border and input colors */
-  --border: 20 5.9% 90%;
-  --input: 20 5.9% 90%;
-  --ring: 20 14% 4%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
 
-  /* Primary accent colors */
-  --primary: 142 76% 36%;        /* Sage green for income */
-  --primary-foreground: 0 0% 100%;
+  --primary: 221.2 83.2% 53.3%;         /* Professional Blue */
+  --primary-foreground: 210 40% 98%;
 
-  /* Secondary colors */
-  --secondary: 60 9.1% 97.8%;
-  --secondary-foreground: 24 9.8% 10%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 240 6% 10%;
 
-  /* Muted colors */
-  --muted: 60 4.8% 95.9%;
-  --muted-foreground: 25 5.3% 44.7%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 240 4% 46%; /* zinc-500 */
 
-  /* Accent colors */
-  --accent: 60 4.8% 95.9%;
-  --accent-foreground: 24 9.8% 10%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 240 6% 10%;
 
-  /* Destructive */
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
 
-  /* Popover */
   --popover: 0 0% 100%;
-  --popover-foreground: 20 14% 4%;
+  --popover-foreground: 240 10% 4%;
 
-  /* Chart colors matching image.jpg */
-  --chart-1: 142 76% 36%;        /* Sage green */
-  --chart-2: 45 93% 78%;         /* Pastel yellow */
-  --chart-3: 239 84% 67%;        /* Periwinkle blue */
-  --chart-4: 280 65% 60%;        /* Purple */
-  --chart-5: 340 82% 52%;        /* Pink */
+  --chart-1: 142 76% 36%;
+  --chart-2: 45 93% 78%;
+  --chart-3: 239 84% 67%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 82% 52%;
 
-  --radius: 1rem; /* 16px smooth rounded corners */
+  --radius: 1rem;
 }
 
 .light {
-  --background: 45 12% 95%;
-  --foreground: 20 14% 4%;
+  --background: 210 40% 98%;
+  --foreground: 222.2 47.4% 11.2%;
   --card: 0 0% 100%;
-  --card-foreground: 20 14% 4%;
+  --card-foreground: 222.2 47.4% 11.2%;
   --popover: 0 0% 100%;
-  --popover-foreground: 20 14% 4%;
-  --primary: 142 76% 36%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 60 9.1% 97.8%;
-  --secondary-foreground: 24 9.8% 10%;
-  --muted: 60 4.8% 95.9%;
-  --muted-foreground: 25 5.3% 44.7%;
-  --accent: 60 4.8% 95.9%;
-  --accent-foreground: 24 9.8% 10%;
+  --popover-foreground: 222.2 47.4% 11.2%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
   --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 20 5.9% 90%;
-  --input: 20 5.9% 90%;
-  --ring: 20 14% 4%;
-  --sidebar-background: 0 0% 12%;
-  --sidebar-foreground: 0 0% 98%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --sidebar-background: 222.2 47.4% 11.2%;
+  --sidebar-foreground: 210 40% 98%;
 }
 
 @theme inline {

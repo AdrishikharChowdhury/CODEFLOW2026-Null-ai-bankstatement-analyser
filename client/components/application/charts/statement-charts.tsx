@@ -26,29 +26,28 @@ export function StatementCharts({
 }: StatementChartsProps) {
   return (
       <div className="flex flex-col gap-6">
-        {/* Metric cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <MetricCard
             label="Total Income"
-            value={`₹${healthScore.total_income.toLocaleString()}`}
+            value={`₹${healthScore.total_income.toLocaleString("en-IN")}`}
             color="text-green-500"
           />
           <MetricCard
             label="Total Expenses"
-            value={`₹${healthScore.total_expense.toLocaleString()}`}
+            value={`₹${healthScore.total_expense.toLocaleString("en-IN")}`}
             color="text-red-400"
           />
           <MetricCard
             label="Net Savings"
-            value={`₹${healthScore.net_savings.toLocaleString()}`}
-            color={healthScore.net_savings >= 0 ? "text-green-pea-100" : "text-red-400"}
+            value={`₹${healthScore.net_savings.toLocaleString("en-IN")}`}
+            color={healthScore.net_savings >= 0 ? "text-green-600" : "text-red-400"}
           />
           <MetricCard
             label="Savings Rate"
             value={`${healthScore.savings_rate.toFixed(1)}%`}
             color={
               healthScore.health_label === "Strong"
-                ? "text-green-pea-100"
+                ? "text-green-600"
                 : healthScore.health_label === "Critical"
                 ? "text-red-400"
                 : "text-amber-400"
@@ -59,8 +58,8 @@ export function StatementCharts({
         {/* Chart row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Donut: Expense categories */}
-          <div className="bg-green-pea-1900 border border-green-pea-400 rounded-xl p-4 shadow-sm">
-            <h3 className="text-lg font-semibold mb-2 text-green-pea-50">
+          <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+            <h3 className="text-lg font-semibold mb-2 text-foreground">
               Expense Categories
             </h3>
             {categoryExpense.length > 0 ? (
@@ -88,13 +87,13 @@ export function StatementCharts({
                 }}
               />
             ) : (
-              <p className="text-green-pea-200">No expense data available</p>
+              <p className="text-muted-foreground">No expense data available</p>
             )}
           </div>
 
           {/* Line chart: Balance trend */}
-          <div className="bg-green-pea-1900 border border-green-pea-400 rounded-xl p-4 shadow-sm">
-            <h3 className="text-lg font-semibold mb-2 text-green-pea-50">
+          <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+            <h3 className="text-lg font-semibold mb-2 text-foreground">
               Balance Trend
             </h3>
             {transactions.length > 0 ? (
@@ -116,15 +115,15 @@ export function StatementCharts({
                 height={300}
               />
             ) : (
-              <p className="text-green-pea-200">No transaction data available</p>
+              <p className="text-muted-foreground">No transaction data available</p>
             )}
           </div>
         </div>
 
         {/* Bar chart: Top recurring payments */}
         {recurringPayments.length > 0 && (
-          <div className="bg-green-pea-1900 border border-green-pea-400 rounded-xl p-4 shadow-sm">
-            <h3 className="text-lg font-semibold mb-2 text-green-pea-50">
+          <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+            <h3 className="text-lg font-semibold mb-2 text-foreground">
               Top Recurring Payments
             </h3>
             <BarChart
@@ -160,8 +159,8 @@ function MetricCard({
   color: string;
 }) {
   return (
-    <div className="bg-green-pea-1900 border border-green-pea-400 rounded-xl p-4 shadow-sm">
-      <p className="text-sm text-green-pea-200 mb-1">{label}</p>
+    <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+      <p className="text-sm text-muted-foreground mb-1">{label}</p>
       <p className={`text-2xl font-bold flex gap-2 items-center ${color}`}>{value}
 
         {label==="Total Income"?<TrendingUp/>:label==="Total Expenses"?<TrendingDown/>:""}
