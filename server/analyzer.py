@@ -16,6 +16,8 @@ from setfit import SetFitModel
 
 load_dotenv()
 
+from util import to_json_safe
+
 from parser import (
     self_healing_normalization,
     compute_financial_health,
@@ -86,8 +88,8 @@ def analyze_csv(csv_path: str) -> dict:
     # 7. Recommendations
     recommendations = local_recommendations(health, category_expense, recurring_df)
 
-    # 8. Build result
-    result = {
+    # 8. Build result & convert to JSON-safe
+    result = to_json_safe({
         "success": True,
         "transactions": processed_df.fillna(0).to_dict(orient="records"),
         "health_score": health,
@@ -95,12 +97,12 @@ def analyze_csv(csv_path: str) -> dict:
         "income_summary": income_summary.to_dict(orient="records"),
         "recurring_payments": recurring_df.to_dict(orient="records"),
         "recommendations": recommendations,
-    }
+    })
 
     # 9. Save JSON alongside CSV
     json_path = csv_path.rsplit(".", 1)[0] + ".json"
     with open(json_path, "w") as f:
-        json.dump(result, f, indent=2, default=str)
+        json.dump(result, f, indent=2)
     print(f"Analysis JSON saved to: {json_path}")
 
     return result
