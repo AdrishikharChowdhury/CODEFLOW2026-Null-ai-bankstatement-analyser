@@ -1,16 +1,20 @@
 import { Sidebar } from "@/components/Sidebar";
 import { StatementCharts } from "@/components/application/charts/statement-charts";
+import { BudgetMetricCards } from "@/components/application/charts/budget-metric-cards";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { getSummaries } from "@/lib/actions/statements.action";
+import { getBudget } from "@/lib/actions/users.action";
 import { SelectStatementAnalytical } from "@/components/SelectStatementAnalytical";
 
 export default async function AnalyticsPage() {
   const user = await currentUser();
   if (!user) redirect("/sign-in");
-  const summaries=await getSummaries(user.id);
+  const [summaries, budget] = await Promise.all([
+    getSummaries(user.id),
+    getBudget(),
+  ]);
 
-  // Mock data for demonstration - replace with actual data fetching
   const mockData = {
     category_expense: [],
     transactions: [],
@@ -29,13 +33,20 @@ export default async function AnalyticsPage() {
       <Sidebar />
       <div className="ml-64 p-8">
         <div className="max-w-400 mx-auto flex flex-col">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Anaytics</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Analytics</h1>
           <p className="text-muted-foreground mb-8">
-            Detailed Transaction Analysis
+            Select a statement to view detailed transaction analysis
           </p>
           <div className="py-6 self-end">
             <SelectStatementAnalytical summaries={summaries} />
           </div>
+
+          {budget && (
+            <div className="mb-8">
+              <BudgetMetricCards budget={budget} totalExpense={0} />
+            </div>
+          )}
+
           <StatementCharts
             categoryExpense={mockData.category_expense}
             transactions={mockData.transactions}
