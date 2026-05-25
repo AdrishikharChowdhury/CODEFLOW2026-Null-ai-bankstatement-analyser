@@ -1,0 +1,3 @@
+ALTER TABLE statements
+ADD COLUMN IF NOT EXISTS ai_advice TEXT,
+ADD COLUMN IF NOT EXISTS fraud_detection TEXT;

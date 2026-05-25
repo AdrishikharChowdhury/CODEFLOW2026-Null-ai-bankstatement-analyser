@@ -56,30 +56,48 @@ export async function uploadStatement(
 export const getSummaries = async (
   userId: string
 ): Promise<
-  { summary: SummaryData; id: string; created_at: string }[]
+  { summary: SummaryData; id: string; created_at: string; ai_advice: string | null; fraud_detection: string | null }[]
 > => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("statements")
-    .select("summary,id,created_at")
+    .select("summary,id,created_at,ai_advice,fraud_detection")
     .order("created_at", { ascending: false })
     .eq("user_id", userId);
 
   if (error) throw new Error(error.message);
-  return data as { summary: SummaryData; id: string; created_at: string }[];
+  return data as { summary: SummaryData; id: string; created_at: string; ai_advice: string | null; fraud_detection: string | null }[];
 };
 
 export const getSummary = async (
   userId: string,
   id: string
-): Promise<{ summary: SummaryData; created_at: string }> => {
+): Promise<{ summary: SummaryData; created_at: string; ai_advice: string | null; fraud_detection: string | null }> => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("statements")
-    .select("summary,created_at")
+    .select("summary,created_at,ai_advice,fraud_detection")
     .eq("user_id", userId)
     .eq("id", id);
 
   if (error) throw new Error(error.message);
-  return data[0] as { summary: SummaryData; created_at: string };
+  return data[0] as { summary: SummaryData; created_at: string; ai_advice: string | null; fraud_detection: string | null };
+};
+
+export const saveAdvice = async (
+  id: string,
+  aiAdvice: string,
+  fraudDetection: string
+) => {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
+
+  const supabase = createSupabaseClient();
+  const { error } = await supabase
+    .from("statements")
+    .update({ ai_advice: aiAdvice, fraud_detection: fraudDetection })
+    .eq("id", id)
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
 };

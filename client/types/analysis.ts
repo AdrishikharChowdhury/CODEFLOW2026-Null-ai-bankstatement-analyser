@@ -55,4 +55,6 @@ export interface SummaryData {
   recurring_payments: RecurringPayment[];
   recommendations: string[];
   story?: string;
+  ai_advice?: string;
+  fraud_detection?: string;
 }

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { getSummary } from "@/lib/actions/statements.action";
+import { getSummary, saveAdvice } from "@/lib/actions/statements.action";
 import { getBudget } from "@/lib/actions/users.action";
 import { generateStory } from "@/lib/actions/insights.action";
 import { getPostHogClient } from "@/lib/posthog-server";
@@ -34,7 +34,7 @@ const page = async ({ params }: DashboardPageProps) => {
     getBudget(),
   ]);
 
-  const { summary, created_at } = await getSummary(user.id, id);
+  const { summary, created_at, ai_advice, fraud_detection } = await getSummary(user.id, id);
   const {
     transactions,
     category_expense,
@@ -53,14 +53,21 @@ const page = async ({ params }: DashboardPageProps) => {
     },
   });
 
-  let story = "";
+  let story = ai_advice ?? "";
   let fraudAlerts: string[] = [];
-  try {
-    const result = await generateStory(summary as SummaryData);
-    story = result.story;
-    fraudAlerts = result.fraud_alerts;
-  } catch (e) {
-    console.error("Story generation failed:", e);
+  if (fraud_detection) {
+    try { fraudAlerts = JSON.parse(fraud_detection); } catch { fraudAlerts = []; }
+  }
+
+  if (!ai_advice) {
+    try {
+      const result = await generateStory(summary as SummaryData);
+      story = result.story;
+      fraudAlerts = result.fraud_alerts;
+      await saveAdvice(id, story, JSON.stringify(fraudAlerts));
+    } catch (e) {
+      console.error("Story generation failed:", e);
+    }
   }
 
   const totalExpense = summary.health_score?.total_expense ?? 0;

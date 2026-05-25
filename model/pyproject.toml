@@ -1,0 +1,32 @@
+[project]
+name = "model"
+version = "0.1.0"
+description = "ML model server for AI Bank Statement Analyser"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.47.0",
+    "python-dotenv>=1.0.1",
+    "supabase>=2.30.0",
+    "numpy>=1.26.0",
+    "pandas>=2.2.0",
+    "scikit-learn==1.6.1",
+    "datasets==2.19.0",
+    "huggingface-hub>=0.34.0,<1.0",
+    "sentence-transformers==3.3.1",
+    "setfit==1.0.3",
+    "torch>=2.2.0",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[tool.uv]
+managed = true
+compile-bytecode = false
