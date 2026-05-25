@@ -3,35 +3,36 @@ name = "server"
 version = "0.1.0"
 description = "FastAPI server optimized for GenAI and text embeddings"
 readme = "README.md"
-requires-python = ">=3.11"  # Kept under 3.13 as Torch wheels for 3.13 are still freshly evolving
+requires-python = ">=3.11,<3.13"
 dependencies = [
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.47.0",
     "google-genai>=2.6.0",
     "python-dotenv>=1.0.1",
     "supabase>=2.30.0",
-    # Data Processing & Visualization
     "numpy>=1.26.0",
     "pandas>=2.2.0",
     "plotly>=5.20.0",
-    # Document Parsing
     "pdfplumber>=0.11.0",
     "pymupdf>=1.24.0",
-    # Machine Learning & Embeddings
     "scikit-learn==1.6.1",
     "datasets==2.19.0",
     "huggingface-hub>=0.34.0,<1.0",
     "sentence-transformers==3.3.1",
     "setfit==1.0.3",
-    "torch>=2.2.0; tool_uv_index == 'pytorch-cpu'",        # Light CPU-only version
+    "torch>=2.2.0",  # Cleaned up: No inline uv index marker
 ]
 
-# Force UV to fetch the lightweight CPU-only wheels for PyTorch
+# Configure the extra index cleanly
 [[tool.uv.index]]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
+# Tie Torch to that explicit index without breaking PEP 508 rules
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
 [tool.uv]
 managed = true
-compile-bytecode = false # Prevents high memory/CPU spikes during deployment
+compile-bytecode = false
