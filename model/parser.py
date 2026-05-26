@@ -26,6 +26,13 @@ def normalize_csv_columns(df):
 
 def self_healing_normalization(df_raw):
     df = df_raw.copy()
+    for col in ['debit', 'credit', 'balance']:
+        if col not in df.columns:
+            print(f"[model] missing column '{col}' — filling with 0")
+            df[col] = 0.0
+    if 'description' not in df.columns:
+        print(f"[model] missing column 'description' — filling with empty string")
+        df['description'] = ""
     df['debit_value'] = pd.to_numeric(df['debit'], errors='coerce').fillna(0.0)
     df['credit_value'] = pd.to_numeric(df['credit'], errors='coerce').fillna(0.0)
     df['balance_value'] = pd.to_numeric(df['balance'], errors='coerce').fillna(0.0)
