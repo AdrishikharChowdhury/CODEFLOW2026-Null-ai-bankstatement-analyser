@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/accordion";
 import { SelectStatement } from "@/components/SelectStatement";
 import { getSummaries } from "@/lib/actions/statements.action";
+import Loader from "@/components/Loader";
 
 export default async function DashboardPage() {
   const user = await currentUser();
@@ -192,6 +193,7 @@ export default async function DashboardPage() {
               </AccordionItem>
             </Accordion>
           </div>
+          <Loader />
         </div>
       </div>
     </div>

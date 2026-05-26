@@ -209,7 +209,7 @@ export const FileUploadDropZone = ({
         >
             <FeaturedIcon icon={UploadCloud02} color="gray" theme="modern" size="md" className={cx(isDisabled && "opacity-50")} />
 
-            <div className="flex flex-col gap-1 text-center">
+            <div className="flex flex-col gap-1 text-center text-black">
                 <div className="flex justify-center gap-1 text-center">
                     <input
                         ref={inputRef}
@@ -228,7 +228,7 @@ export const FileUploadDropZone = ({
                     </label>
                     <span className="text-sm max-md:hidden">or drag and drop</span>
                 </div>
-                <p className={cx("text-xs transition duration-100 ease-linear", isInvalid && "text-error-primary")}>
+                <p className={cx("text-xs transition duration-100 ease-linear", isInvalid && "text-error-primary ")}>
                     {hint || "SVG, PNG, JPG or GIF (max. 800x400px)"}
                 </p>
             </div>
@@ -264,7 +264,7 @@ export const FileListItemProgressBar = ({ name, size, progress, failed, type, fi
         <motion.li
             layout="position"
             className={cx(
-                "relative flex gap-3 rounded-xl bg-primary p-4 ring-1 ring-secondary transition-shadow duration-100 ease-linear ring-inset",
+                "relative flex gap-3 rounded-xl bg-primary p-4 ring-1 ring-secondary transition-shadow duration-100 ease-linear ring-inset ",
                 failed && "ring-2 ring-error",
                 className,
             )}

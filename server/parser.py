@@ -250,11 +250,11 @@ def normalize_csv_columns(df):
     for col in df.columns:
         lower = col.lower().strip()
         for standard, variants in COLUMN_MAP.items():
-            if lower in variants:
+            if any(v in lower for v in variants):
                 mapping[col] = standard
                 break
     df = df.rename(columns=mapping)
-    keep = list(mapping.values())
+    df = df[list(mapping.values())]
     return df
 
 

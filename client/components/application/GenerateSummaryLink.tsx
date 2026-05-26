@@ -10,7 +10,7 @@ export function GenerateSummaryLink({ className }: { className?: string }) {
       className={className}
       onClick={() => posthog.capture("generate_summary_clicked")}
     >
-      Generate Summary
+      Redirect to Dashboard
     </Link>
   );
 }
