@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
+import { createAdminClient } from "@/utils/supabase-admin";
 import { createSupabaseClient } from "@/utils/supabase";
 import type { ParseResponse, SummaryData } from "@/types";
 
@@ -16,7 +17,7 @@ export async function uploadStatement(
   const file = formData.get("file") as File | null;
   if (!file) return { error: "No file provided" };
 
-  const supabase = createSupabaseClient();
+  const supabase = createAdminClient();
 
   const fileName = `${userId}/${crypto.randomUUID()}-${file.name}`;
 
