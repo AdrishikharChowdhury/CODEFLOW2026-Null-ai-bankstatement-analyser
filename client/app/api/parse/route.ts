@@ -8,6 +8,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const posthog = getPostHogClient();
   try {
     const body: ParseBody = await req.json();
+    // Validate required fields
     if (!body.storage_path || !body.file_name || !body.file_type) {
       return NextResponse.json(
         { message: "Missing required fields: storage_path, file_name, file_type" },
@@ -20,50 +21,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         { status: 400 },
       );
     }
-
-    const modelUrl = process.env.NEXT_PUBLIC_MODEL_SERVICE_URL;
-    const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
-    if (!modelUrl || !serverUrl) {
-      return NextResponse.json(
-        { message: "Parsing failed", error: "Service URLs not configured" },
-        { status: 500 },
-      );
-    }
-
-    // CSV → call model service directly (bypass FastAPI)
-    // PDF  → call FastAPI (pre-processing needed)
-    const targetUrl =
-      body.file_type === "csv"
-        ? `${modelUrl}/predict`
-        : `${serverUrl}/api/parse`;
-
-    console.log("[parse] file_type:", body.file_type, "targetUrl:", targetUrl);
-
-    const payload =
-      body.file_type === "csv"
-        ? {
-            storage_path: body.storage_path,
-            file_name: body.file_name,
-            file_type: body.file_type,
-            csv_url: "",
-          }
-        : body;
-
-    const fastapiRes = await fetch(targetUrl, {
+    // Forward to FastAPI
+    const fastapiRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/parse`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(body),
     });
-    console.log("[parse] downstream status:", fastapiRes.status, "ok:", fastapiRes.ok);
     if (!fastapiRes.ok) {
-      let errorBody: Record<string, unknown> = {};
-      try {
-        errorBody = await fastapiRes.json();
-      } catch {
-        const text = await fastapiRes.text().catch(() => "");
-        console.log("[parse] non-json response body:", text.slice(0, 500));
-      }
-      const errorDetail = (errorBody?.detail as string) || `Service returned ${fastapiRes.status}`;
+      const errorBody = await fastapiRes.json().catch(() => ({}));
+      const errorDetail = errorBody.detail || `FastAPI returned ${fastapiRes.status}`;
       if (userId) {
         posthog.capture({
           distinctId: userId,
@@ -83,61 +49,32 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         { status: fastapiRes.status },
       );
     }
-    let data: Record<string, unknown> = {};
-    try {
-      data = await fastapiRes.json();
-    } catch {
-      const text = await fastapiRes.text().catch(() => "");
-      console.log("[parse] success body not json:", text.slice(0, 500));
-      return NextResponse.json(
-        { message: "Parsing failed", error: "Response was not valid JSON" },
-        { status: 502 },
-      );
-    }
-    const d = data as {
-      success?: boolean;
-      transactions?: unknown[];
-      health_score?: { health_label?: string };
-      category_expense?: unknown[];
-      recurring_payments?: unknown[];
-      recommendations?: unknown[];
-      csv_path?: string | null;
-      json_path?: string | null;
-    };
-    console.log("[parse] downstream success:", !!d.success);
-    if (!d.success) {
-      const modelErr = (data as { error?: string }).error || "Model analysis failed";
-      console.log("[parse] model error:", modelErr);
-      return NextResponse.json(
-        { message: "Parsing failed", error: modelErr },
-        { status: 200 },
-      );
-    }
+    const data = await fastapiRes.json();
     if (userId) {
       posthog.capture({
         distinctId: userId,
         event: "statement_parsed",
         properties: {
           file_type: body.file_type,
-          transaction_count: (d.transactions ?? []).length,
-          health_label: d.health_score?.health_label ?? null,
-          category_count: (d.category_expense ?? []).length,
-          recurring_payment_count: (d.recurring_payments ?? []).length,
+          transaction_count: (data.transactions ?? []).length,
+          health_label: data.health_score?.health_label ?? null,
+          category_count: (data.category_expense ?? []).length,
+          recurring_payment_count: (data.recurring_payments ?? []).length,
         },
       });
     }
     return NextResponse.json(
       {
         message: "Statement parsed successfully",
-        success: d.success,
-        transactions: d.transactions ?? [],
-        health_score: d.health_score ?? null,
-        category_expense: d.category_expense ?? [],
-        income_summary: (data as { income_summary?: unknown[] }).income_summary ?? [],
-        recurring_payments: d.recurring_payments ?? [],
-        recommendations: d.recommendations ?? [],
-        csv_path: d.csv_path ?? null,
-        json_path: d.json_path ?? null,
+        success: data.success,
+        transactions: data.transactions ?? [],
+        health_score: data.health_score ?? null,
+        category_expense: data.category_expense ?? [],
+        income_summary: data.income_summary ?? [],
+        recurring_payments: data.recurring_payments ?? [],
+        recommendations: data.recommendations ?? [],
+        csv_path: data.csv_path ?? null,
+        json_path: data.json_path ?? null,
       },
       { status: 200 },
     );

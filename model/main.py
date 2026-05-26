@@ -25,21 +25,17 @@ class PredictResponse(BaseModel):
     recommendations: list | None = None
     error: str | None = None
 
-STATEMENTS_BUCKET = "statements"
 CSV_BUCKET = "csv"
 
-def ensure_buckets():
+def ensure_csv_bucket():
     try:
         buckets = supabase.storage.list_buckets()
-        bucket_names = [b.name for b in buckets]
-        if CSV_BUCKET not in bucket_names:
+        if not any(b.name == CSV_BUCKET for b in buckets):
             supabase.storage.create_bucket(CSV_BUCKET, {"public": True})
-        if STATEMENTS_BUCKET not in bucket_names:
-            supabase.storage.create_bucket(STATEMENTS_BUCKET, {"public": True})
     except Exception:
         pass
 
-ensure_buckets()
+ensure_csv_bucket()
 
 app = FastAPI(title="Financialo Model Server")
 app.add_middleware(
@@ -62,17 +58,12 @@ def health_check():
 def predict(req: PredictRequest):
     user_id = req.storage_path.split("/")[0]
 
-    # 1. Download CSV
+    # 1. Download CSV from Supabase csv_bucket
     try:
-        if req.file_type == "csv":
-            bucket = STATEMENTS_BUCKET
-            path = req.storage_path
-        else:
-            bucket = CSV_BUCKET
-            path = req.csv_url.split(f"/{CSV_BUCKET}/")[-1] if f"/{CSV_BUCKET}/" in req.csv_url else req.csv_url
-        res = supabase.storage.from_(bucket).download(path)
+        csv_path = req.csv_url.split(f"/{CSV_BUCKET}/")[-1] if f"/{CSV_BUCKET}/" in req.csv_url else req.csv_url
+        res = supabase.storage.from_(CSV_BUCKET).download(csv_path)
         if res is None:
-            return PredictResponse(success=False, error=f"CSV not found in {bucket}")
+            return PredictResponse(success=False, error="CSV not found in csv_bucket")
         if hasattr(res, "read"):
             buffer = io.BytesIO(res.read())
         else:
