@@ -3,6 +3,27 @@ import pandas as pd
 import numpy as np
 
 
+COLUMN_MAP = {
+    "date": ("date", "txn date", "transaction date", "value date", "post date", "txn_date"),
+    "description": ("description", "narration", "particulars", "transaction details", "remarks", "details", "transaction"),
+    "debit": ("debit", "withdrawal", "withdraw", "dr", "debit amount", "dr amount", "wd", "debit_amt"),
+    "credit": ("credit", "deposit", "cr", "credit amount", "cr amount", "deposit amount", "credit_amt"),
+    "balance": ("balance", "available balance", "ledger balance", "closing balance", "bal", "curr balance"),
+}
+
+def normalize_csv_columns(df):
+    mapping = {}
+    for col in df.columns:
+        lower = col.lower().strip()
+        for standard, variants in COLUMN_MAP.items():
+            if any(v in lower for v in variants):
+                mapping[col] = standard
+                break
+    df = df.rename(columns=mapping)
+    df = df[list(mapping.values())]
+    return df
+
+
 def self_healing_normalization(df_raw):
     df = df_raw.copy()
     df['debit_value'] = pd.to_numeric(df['debit'], errors='coerce').fillna(0.0)

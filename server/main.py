@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import httpx
 from sanitization import sanitize
-from parser import extract_rows_from_pdf, self_healing_normalization, compute_financial_health, normalize_csv_columns, parse_text_to_df
+from parser import extract_rows_from_pdf, self_healing_normalization, normalize_csv_columns
 from pydantic import BaseModel
 
 MODEL_SERVICE_URL = os.getenv("MODEL_SERVICE_URL")

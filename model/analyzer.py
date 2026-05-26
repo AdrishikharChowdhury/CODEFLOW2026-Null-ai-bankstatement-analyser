@@ -15,6 +15,7 @@ from setfit import SetFitModel
 from util import to_json_safe
 
 from parser import (
+    normalize_csv_columns,
     self_healing_normalization,
     compute_financial_health,
     enrich_transaction_categories,
@@ -40,6 +41,7 @@ def _load_model():
 
 def analyze_csv(csv_path: str) -> dict:
     df = pd.read_csv(csv_path)
+    df = normalize_csv_columns(df)
 
     processed_df = self_healing_normalization(df)
 

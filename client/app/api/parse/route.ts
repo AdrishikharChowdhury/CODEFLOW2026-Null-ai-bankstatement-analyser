@@ -8,7 +8,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const posthog = getPostHogClient();
   try {
     const body: ParseBody = await req.json();
-    // Validate required fields
     if (!body.storage_path || !body.file_name || !body.file_type) {
       return NextResponse.json(
         { message: "Missing required fields: storage_path, file_name, file_type" },
@@ -21,15 +20,32 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         { status: 400 },
       );
     }
-    // Forward to FastAPI
-    const fastapiRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/parse`, {
+
+    // CSV → call model service directly (bypass FastAPI)
+    // PDF  → call FastAPI (pre-processing needed)
+    const targetUrl =
+      body.file_type === "csv"
+        ? `${process.env.NEXT_PUBLIC_MODEL_SERVICE_URL}/predict`
+        : `${process.env.NEXT_PUBLIC_SERVER_URL}/api/parse`;
+
+    const payload =
+      body.file_type === "csv"
+        ? {
+            storage_path: body.storage_path,
+            file_name: body.file_name,
+            file_type: body.file_type,
+            csv_url: "",
+          }
+        : body;
+
+    const fastapiRes = await fetch(targetUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify(payload),
     });
     if (!fastapiRes.ok) {
       const errorBody = await fastapiRes.json().catch(() => ({}));
-      const errorDetail = errorBody.detail || `FastAPI returned ${fastapiRes.status}`;
+      const errorDetail = errorBody.detail || `Service returned ${fastapiRes.status}`;
       if (userId) {
         posthog.capture({
           distinctId: userId,
