@@ -22,7 +22,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
     // Forward to FastAPI
-    const fastapiRes = await fetch("http://localhost:8000/api/parse", {
+    const fastapiRes = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/parse`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

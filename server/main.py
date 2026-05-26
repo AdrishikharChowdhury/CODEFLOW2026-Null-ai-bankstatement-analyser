@@ -10,7 +10,7 @@ from sanitization import sanitize
 from parser import extract_rows_from_pdf, self_healing_normalization, compute_financial_health, normalize_csv_columns, parse_text_to_df
 from pydantic import BaseModel
 
-MODEL_SERVICE_URL = os.getenv("MODEL_SERVICE_URL", "http://localhost:8001")
+MODEL_SERVICE_URL = os.getenv("MODEL_SERVICE_URL")
 CSV_BUCKET = "csv"
 
 def ensure_csv_bucket():
