@@ -1,6 +1,7 @@
 import os
 import io
 import uuid
+import time
 from fastapi import FastAPI
 from db import supabase
 from fastapi.middleware.cors import CORSMiddleware
@@ -118,26 +119,48 @@ def parse_statement(req: ParseRequest):
         print(f"CSV upload failed: {e}")
         return ParseResponse(success=False, error=f"CSV upload failed: {e}")
 
-    # 5. Call model service for ML analysis
-    try:
-        with httpx.Client(timeout=300) as client:
-            model_resp = client.post(
-                f"{MODEL_SERVICE_URL}/predict",
-                json={
-                    "csv_url": csv_url.public_url if hasattr(csv_url, "public_url") else csv_url,
-                    "storage_path": req.storage_path,
-                    "file_name": req.file_name,
-                    "file_type": req.file_type,
-                },
-            )
-        if model_resp.status_code != 200:
-            return ParseResponse(success=False, error=f"Model service returned {model_resp.status_code}: {model_resp.text}")
-        analysis = model_resp.json()
-        if not analysis.get("success"):
-            return ParseResponse(success=False, error=analysis.get("error", "Model analysis failed"))
-    except Exception as e:
-        print(f"Model service call failed: {e}")
-        return ParseResponse(success=False, error=f"Model service call failed: {e}")
+    # 5. Call model service for ML analysis (with wake-on-demand retry)
+    # Warm-up: Railway wakes the container on first connection attempt
+    for attempt in range(2):
+        try:
+            with httpx.Client(timeout=5) as client:
+                warmup = client.get(f"{MODEL_SERVICE_URL}/api/health")
+            if warmup.status_code == 200:
+                break
+        except Exception:
+            if attempt == 0:
+                time.sleep(3)
+            else:
+                pass
+
+    last_error = None
+    for attempt in range(2):
+        try:
+            with httpx.Client(timeout=300) as client:
+                model_resp = client.post(
+                    f"{MODEL_SERVICE_URL}/predict",
+                    json={
+                        "csv_url": csv_url.public_url if hasattr(csv_url, "public_url") else csv_url,
+                        "storage_path": req.storage_path,
+                        "file_name": req.file_name,
+                        "file_type": req.file_type,
+                    },
+                )
+            if model_resp.status_code == 200:
+                analysis = model_resp.json()
+                if analysis.get("success"):
+                    break
+                last_error = analysis.get("error", "Model analysis failed")
+            else:
+                last_error = f"Model service returned {model_resp.status_code}: {model_resp.text}"
+        except Exception as e:
+            last_error = f"Model service call failed: {e}"
+
+        if attempt == 0:
+            time.sleep(3)
+        else:
+            print(last_error)
+            return ParseResponse(success=False, error=last_error)
 
     return ParseResponse(
         success=True,
