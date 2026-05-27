@@ -9,30 +9,37 @@ An AI-powered platform that ingests PDF/CSV bank statements, extracts transactio
 ```
 client/          Next.js 16 frontend (App Router, Tailwind, shadcn/ui)
 server/          Python FastAPI backend + Streamlit alternative UI
+model/           ML model service (SetFit classification)
 ```
 
 - **Frontend** handles auth (Clerk), file upload, interactive dashboards, AI chatbot, and analytics.
 - **Backend** parses statements (pdfplumber → regex → Gemini fallback), runs ML categorization (SetFit), computes health scores, and detects fraud.
+- **Model** Standalone FastAPI service that runs SetFit + analysis pipeline.
 
 ## Features
 
 - **Statement Parsing** — PDF/CSV ingestion with multi-strategy extraction and fallbacks
 - **Transaction Categorization** — SetFit ML model (5 fine-tuned classes + rule-based for 10+ categories)
-- **Financial Health Score** — Income/expense/savings rate with health label (Strong/Stable/Watch/Critical)
+- **Financial Health Score** — Income/expense/savings rate with health label (Strong/Stable/Watch/Critical) and 20% savings rate threshold
 - **Fraud Detection** — Rule-based heuristics + optional LightGBM model (Streamlit)
 - **Recurring Payment Detection** — Auto-identifies periodic expenses by merchant
-- **AI Financial Story** — Groq-powered narrative summarising financial activity
-- **AI Chatbot** — Context-aware Q&A about your statements (Groq llama-3.3-70b)
+- **AI Financial Story** — Groq-powered narrative with markdown formatting (react-markdown + remark-gfm)
+- **AI Chatbot** — Context-aware Q&A with prose summaries for token efficiency (Groq llama-3.3-70b)
 - **Budget Management** — Daily/weekly/monthly/yearly budget tracking in Supabase
+- **Cross-Statement Performance Dashboards** — Area chart (savings rate trend), scatter chart (income vs expense), sparkline metric cards, health badge timeline
 - **PII Sanitization** — Automatic redaction of account numbers, IFSC, emails, UPI IDs
-- **Analytics Dashboard** — MUI X-Charts, expense pie charts, balance timeline, budget cards
+- **Analytics Dashboard** — MUI X-Charts, expense pie charts, balance timeline, budget metric cards
+- **Global Dark/Light Theme** — Unified via `<html>.dark` class, persisted in localStorage, works across all pages
+- **Collapsible Sidebar** — Dashboard sidebar with icon-only collapsed state, theme toggle, tooltips
+- **Skeleton Loaders** — phantom-ui structure-aware shimmer skeletons for tables, charts, and cards on all dashboard routes
+- **Upload → Auto-Redirect** — ldrs DotWave loader overlay during statement processing, then redirects to dashboard
 - **Data Export** — CSV download of extracted transactions
 
 ## Tech Stack
 
 | Layer | Stack |
 |---|---|
-| Frontend | Next.js 16, React 19, TypeScript, Tailwind v4, shadcn/ui, MUI X-Charts, GSAP |
+| Frontend | Next.js 16, React 19, TypeScript, Tailwind v4, shadcn/ui, MUI X-Charts, GSAP, react-markdown, phantom-ui, ldrs |
 | Auth | Clerk |
 | Backend | Python 3.11+, FastAPI, Uvicorn |
 | ML | SetFit (sentence-transformers/all-MiniLM-L6-v2), scikit-learn, PyTorch (CPU) |
@@ -120,14 +127,27 @@ Browser → Next.js /api/parse → FastAPI :8000/api/parse
 
 ```
 ├── client/                          # Next.js frontend
-│   ├── app/                         # Pages (landing, dashboard, sign-in/up)
+│   ├── app/
 │   │   ├── api/parse/route.ts       # Parse proxy to FastAPI
-│   │   └── dashboard/               # Dashboard views + analytics
+│   │   ├── dashboard/               # Dashboard home, analytics, history, settings, statements
+│   │   │   ├── layout.tsx           # Client layout with collapsible sidebar
+│   │   │   ├── loading.tsx          # Skeleton for dashboard home
+│   │   │   ├── analytics/[id]/      # Per-statement analytics + charts + AI advice
+│   │   │   ├── history/[id]/        # All three tables (AI Category, Recurring, Transactions)
+│   │   │   ├── settings/            # Budget management form
+│   │   │   └── statements/          # File upload page
+│   │   └── layout.tsx               # Root layout with ThemeProvider
 │   ├── components/
 │   │   ├── ui/                      # shadcn/ui primitives
-│   │   └── application/             # File upload, charts, summary
+│   │   ├── application/             # File upload, charts (performance, statement, budget)
+│   │   ├── ThemeProvider.tsx        # Global dark/light theme context
+│   │   ├── ThemeToggleButton.tsx    # Theme toggle using useTheme()
+│   │   ├── Sidebar.tsx              # Collapsible sidebar with theme toggle
+│   │   ├── Chatbot.tsx              # AI chatbot with markdown rendering
+│   │   ├── Loader.tsx               # ldrs DotWave loading indicator
+│   │   └── SelectStatement.tsx      # Statement selector dropdown
 │   ├── lib/actions/                 # Server actions (chat, insights, statements, users)
-│   ├── types/                       # TypeScript type definitions
+│   ├── types/                       # TypeScript type definitions + phantom-ui JSX types
 │   └── utils/                       # Supabase clients, formatters
 ├── server/                          # Python backend
 │   ├── main.py                      # FastAPI entry point
@@ -138,8 +158,22 @@ Browser → Next.js /api/parse → FastAPI :8000/api/parse
 │   ├── app.py                       # Streamlit alternative UI
 │   ├── db.py / config.py            # Supabase setup
 │   └── fine_tuned_agami_transformer/ # SetFit model artifacts
+├── model/                           # ML model service
+│   ├── main.py                      # FastAPI service with slug generation + storage cleanup
+│   └── analyzer.py                  # Analysis pipeline
 └── .git/
 ```
+
+## Key Design Decisions
+
+- **`<html>.dark` over scoped theme classes** — Unifies dark mode across landing, dashboard, and auth pages with one localStorage key and one ThemeProvider context.
+- **Sidebar collapsed state in layout** — `useState` in `dashboard/layout.tsx` keeps it scoped; no global context needed since sidebar only appears in dashboard.
+- **Cross-statement dashboards** — Dashboard home shows performance charts across all statements (no per-statement selector). Per-statement views are in `/analytics/[id]` and `/history/[id]`.
+- **Prose summaries for AI context** — Instead of raw JSON, the chatbot/insights system prompt uses ~200 tokens of prose (vs 9,000+ for raw JSON), reducing Groq costs and improving response quality.
+- **Markdown rendering** — AI output is rendered with react-markdown + remark-gfm instead of stripping markdown artifacts, preserving bold, lists, and headings.
+- **20% savings rate threshold** — Simple binary cutoff for colouring (green ≥ 20%, red < 20%) applied consistently across performance and analytics charts.
+- **phantom-ui for skeleton loaders** — Structure-aware web component that measures real DOM to generate perfectly-aligned shimmer blocks. No separate skeleton components to maintain.
+- **ldrs for upload flow** — DotWave loader shown during statement processing; auto-redirects to dashboard on completion.
 
 ## Challenges Faced
 
@@ -151,6 +185,7 @@ Browser → Next.js /api/parse → FastAPI :8000/api/parse
 - **PII Safety** — Account numbers, IFSC codes, UPI IDs, and email addresses appear in unpredictable locations. Designed a comprehensive regex-based sanitisation layer that runs before any data is persisted.
 - **Cross-Platform Dependency Hell** — PaddleOCR and PyTorch CPU require specific system libraries. The `uv` lockfile helped, but platform-specific issues remain for Windows/macOS contributors.
 - **Fraud Detection Without Labels** — No labelled fraud dataset was available. Started with rule-based heuristics (large outlier transactions, velocity checks) and trained a LightGBM model on synthetically-generated anomalies for the Streamlit dashboard.
+- **Phantom-ui SSR Hydration** — Web components need browser APIs for DOM measurement. Used `useEffect` dynamic import pattern + SSR CSS to prevent content flash before hydration.
 
 ## Future Roadmap
 
