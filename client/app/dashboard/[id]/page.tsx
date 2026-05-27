@@ -1,4 +1,3 @@
-import { Sidebar } from "@/components/Sidebar";
 import {
   Table,
   TableBody,
@@ -11,7 +10,7 @@ import {
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { BadgeIndianRupee } from "lucide-react";
-import { formatRedacted } from "@/utils/format";
+import { formatRedacted, formatTimestamp } from "@/utils/format";
 import {
   Accordion,
   AccordionContent,
@@ -40,16 +39,20 @@ export default async function page({ params }: AnalyticsPageProps) {
   } = summary;
 
   return (
-    <div className="min-h-screen bg-background">
-      
-      <div className="ml-64 p-8">
-        <div className="max-w-400 mx-auto flex flex-col">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
-          <p className="text-muted-foreground mb-8">Financial Analytics Overview</p>
-          <div className="py-6 self-end">
-            <SelectStatement summaries={summaries} />
-          </div>
-          <div className="space-y-6">
+    <div className="max-w-400 mx-auto flex flex-col">
+      <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+      <p className="text-muted-foreground mb-8">Financial Analytics Overview</p>
+      <div className="py-6 self-end">
+        <SelectStatement summaries={summaries} />
+      </div>
+      <div className="flex justify-between items-center gap-6">
+              <h1 className="text-center">Statement Summary</h1>
+              <p className="mt-4 text-lg">
+                <span className="font-extrabold text-xl">Created At: </span>
+                {formatTimestamp(created_at)}
+              </p>
+            </div>
+      <div className="space-y-6">
             <Accordion type="single" collapsible defaultValue="item-1">
               <AccordionItem value="item-1">
                 <AccordionTrigger className="text-2xl">AI Category of expenses</AccordionTrigger>
@@ -197,7 +200,5 @@ export default async function page({ params }: AnalyticsPageProps) {
             </Accordion>
           </div>
         </div>
-      </div>
-    </div>
   );
 }

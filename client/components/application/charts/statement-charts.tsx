@@ -4,6 +4,7 @@ import { PieChart, LineChart, BarChart } from "@mui/x-charts";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import type { CategoryExpense, Transaction, RecurringPayment } from "@/types";
 import { TrendingDown, TrendingUp } from "lucide-react";
+import { useTheme } from "@/components/ThemeProvider";
 
 interface StatementChartsProps {
   categoryExpense: CategoryExpense[];
@@ -24,7 +25,16 @@ export function StatementCharts({
   recurringPayments,
   healthScore,
 }: StatementChartsProps) {
+  const { theme } = useTheme();
+
+  const muiTheme = createTheme({
+    palette: {
+      mode: theme === "dark" ? "dark" : "light",
+    },
+  });
+
   return (
+    <ThemeProvider theme={muiTheme}>
       <div className="flex flex-col gap-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <MetricCard
@@ -146,6 +156,7 @@ export function StatementCharts({
           </div>
         )}
       </div>
+    </ThemeProvider>
   );
 }
 

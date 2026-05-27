@@ -57,17 +57,17 @@ export async function uploadStatement(
 export const getSummaries = async (
   userId: string
 ): Promise<
-  { summary: SummaryData; id: string; created_at: string; ai_advice: string | null; fraud_detection: string | null }[]
+  { summary: SummaryData; id: string; created_at: string; ai_advice: string | null; fraud_detection: string | null; slug: string | null }[]
 > => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("statements")
-    .select("summary,id,created_at,ai_advice,fraud_detection")
+    .select("summary,id,created_at,ai_advice,fraud_detection,slug")
     .order("created_at", { ascending: false })
     .eq("user_id", userId);
 
   if (error) throw new Error(error.message);
-  return data as { summary: SummaryData; id: string; created_at: string; ai_advice: string | null; fraud_detection: string | null }[];
+  return data as { summary: SummaryData; id: string; created_at: string; ai_advice: string | null; fraud_detection: string | null; slug: string | null }[];
 };
 
 export const getSummary = async (

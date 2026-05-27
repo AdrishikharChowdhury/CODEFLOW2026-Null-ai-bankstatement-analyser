@@ -5,6 +5,7 @@ import { Noto_Serif_Hentaigana, Geist } from "next/font/google"
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import SyncUser from "@/components/SyncUser";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -28,8 +29,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
          <ClerkProvider appearance={{ theme: shadcn }}>
-          <SyncUser />
-          {children}
+          <ThemeProvider>
+            <SyncUser />
+            {children}
+          </ThemeProvider>
         </ClerkProvider>
       </body>
     </html>

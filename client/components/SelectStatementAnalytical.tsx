@@ -8,10 +8,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 interface Summary {
   id: string;
   created_at: string;
+  slug: string | null;
+  summary: {
+    health_score: {
+      health_label: string;
+    };
+  };
 }
+
+function formatLabel(s: Summary) {
+  if (s.slug) return s.slug;
+  const date = new Date(s.created_at).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+  const label = s.summary?.health_score?.health_label;
+  return label ? `${date} (${label})` : date;
+}
+
 export function SelectStatementAnalytical({
   summaries,
 }: {
@@ -24,9 +43,9 @@ export function SelectStatementAnalytical({
         <SelectValue placeholder="Statements" />
       </SelectTrigger>
       <SelectContent>
-        {summaries.map((s, i) => (
+        {summaries.map((s) => (
           <SelectGroup key={s.id}>
-            <SelectItem value={s.id}>Statement {i + 1}</SelectItem>
+            <SelectItem value={s.id}>{formatLabel(s)}</SelectItem>
           </SelectGroup>
         ))}
       </SelectContent>

@@ -102,9 +102,8 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="h-screen bg-background">
-      <div className="h-full ml-64 p-8 flex justify-center items-center">
-        <div className="max-w-md mx-auto flex h-full justify-center items-center flex-col">
+    <div className="flex justify-center items-center min-h-full">
+        <div className="max-w-md mx-auto flex flex-col items-center">
           <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
           <p className="text-muted-foreground mb-8">
             Set your daily, weekly, monthly &amp; yearly budget limits
@@ -259,7 +258,6 @@ export default function SettingsPage() {
             )}
           </Card>
         </div>
-      </div>
     </div>
   )
 }

@@ -5,6 +5,7 @@ import tempfile
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from datetime import datetime
 from db import supabase
 from analyzer import analyze_csv
 from sanitization import sanitize
@@ -99,9 +100,11 @@ def predict(req: PredictRequest):
 
     # 5. Store in Supabase statements table
     try:
+        slug = datetime.now().strftime("%b %d, %Y %I:%M:%S %p")
         supabase.table("statements").insert({
             "user_id": user_id,
             "summary": analysis,
+            "slug": slug,
         }).execute()
     except Exception as e:
         if os.path.exists(tmp_path):

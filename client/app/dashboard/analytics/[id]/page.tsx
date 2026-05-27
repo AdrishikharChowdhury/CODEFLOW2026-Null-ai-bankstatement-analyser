@@ -73,9 +73,7 @@ const page = async ({ params }: DashboardPageProps) => {
   const totalExpense = summary.health_score?.total_expense ?? 0;
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="ml-64 p-8">
-        <div className="max-w-400 mx-auto flex flex-col">
+    <div className="max-w-400 mx-auto flex flex-col">
           <h1 className="text-3xl font-bold text-foreground mb-2">Analytics</h1>
           <p className="text-muted-foreground mb-8">
             Financial Analytics Overview
@@ -126,8 +124,6 @@ const page = async ({ params }: DashboardPageProps) => {
                     Good News No Fraud has been detected
                   </p>
                 )}
-              </div>
-            </div>
           </div>
         </div>
       </div>

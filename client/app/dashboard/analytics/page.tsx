@@ -1,4 +1,3 @@
-import { Sidebar } from "@/components/Sidebar";
 import { StatementCharts } from "@/components/application/charts/statement-charts";
 import { BudgetMetricCards } from "@/components/application/charts/budget-metric-cards";
 import { currentUser } from "@clerk/nextjs/server";
@@ -29,14 +28,11 @@ export default async function AnalyticsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Sidebar />
-      <div className="ml-64 p-8">
-        <div className="max-w-400 mx-auto flex flex-col">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Analytics</h1>
-          <p className="text-muted-foreground mb-8">
-            Select a statement to view detailed transaction analysis
-          </p>
+    <div className="max-w-400 mx-auto flex flex-col">
+      <h1 className="text-3xl font-bold text-foreground mb-2">Analytics</h1>
+      <p className="text-muted-foreground mb-8">
+        Select a statement to view detailed transaction analysis
+      </p>
           <div className="py-6 self-end">
             <SelectStatementAnalytical summaries={summaries} />
           </div>
@@ -54,7 +50,5 @@ export default async function AnalyticsPage() {
             healthScore={mockData.health_score}
           />
         </div>
-      </div>
-    </div>
   );
 }

@@ -209,7 +209,7 @@ export const FileUploadDropZone = ({
         >
             <FeaturedIcon icon={UploadCloud02} color="gray" theme="modern" size="md" className={cx(isDisabled && "opacity-50")} />
 
-            <div className="flex flex-col gap-1 text-center text-black">
+            <div className="flex flex-col gap-1 text-center text-black dark:text-white">
                 <div className="flex justify-center gap-1 text-center">
                     <input
                         ref={inputRef}
