@@ -5,7 +5,7 @@ import tempfile
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timezone
 from db import supabase
 from analyzer import analyze_csv
 from sanitization import sanitize
@@ -100,7 +100,7 @@ def predict(req: PredictRequest):
 
     # 5. Store in Supabase statements table
     try:
-        slug = datetime.now().strftime("%b %d, %Y %I:%M:%S %p")
+        slug = datetime.now(timezone.utc).strftime("%b %d, %Y %I:%M:%S %p")
         supabase.table("statements").insert({
             "user_id": user_id,
             "summary": analysis,
@@ -111,7 +111,17 @@ def predict(req: PredictRequest):
             os.remove(tmp_path)
         return PredictResponse(success=False, error=f"Database save failed: {e}")
 
-    # 6. Clean up temp file
+    # 6. Clean up storage
+    try:
+        supabase.storage.from_("statements").remove([req.storage_path])
+    except Exception:
+        pass
+    try:
+        supabase.storage.from_(CSV_BUCKET).remove([csv_path])
+    except Exception:
+        pass
+
+    # 7. Clean up temp file
     if os.path.exists(tmp_path):
         os.remove(tmp_path)
 

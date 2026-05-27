@@ -42,12 +42,12 @@ const Navbar = () => {
         </div>
         <Show when="signed-out">
           <SignInButton>
-            <button className="cursor-pointer w-max h-max py-2 px-4 sm:py-3 sm:px-6 rounded-xl border border-primary text-foreground transition-colors hover:bg-primary/10 text-xs sm:text-sm">
+            <button className="cursor-pointer w-max h-max py-2 px-4 sm:py-3 sm:px-6 rounded-sm border border-primary text-foreground transition-colors hover:bg-primary/10 text-xs sm:text-sm">
               Sign In
             </button>
           </SignInButton>
           <SignUpButton>
-            <button className="cursor-pointer w-max h-max py-2 px-4 sm:py-3 sm:px-6 rounded-xl bg-primary text-primary-foreground transition-colors hover:bg-primary/90 text-xs sm:text-sm">
+            <button className="cursor-pointer w-max h-max py-2 px-4 sm:py-3 sm:px-6 rounded-sm bg-primary text-primary-foreground transition-colors hover:bg-primary/90 text-xs sm:text-sm">
               Sign Up
             </button>
           </SignUpButton>
