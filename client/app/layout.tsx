@@ -6,6 +6,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import SyncUser from "@/components/SyncUser";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import "@aejkatappaja/phantom-ui/ssr.css";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
