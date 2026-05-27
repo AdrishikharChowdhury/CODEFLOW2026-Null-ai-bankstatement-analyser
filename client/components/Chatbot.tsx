@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { sendChatMessage } from "@/lib/actions/chat.action";
 import { getSummary } from "@/lib/actions/statements.action";
 import { useUser } from "@clerk/nextjs";
+import ReactMarkdown from "react-markdown";
 
 interface Message {
   role: "user" | "assistant";
@@ -120,7 +121,13 @@ const Chatbot = () => {
                         {msg.role === "user" ? "You" : "AI"}
                       </span>
                     </div>
-                    <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                    {msg.role === "assistant" ? (
+                      <div className="prose prose-sm dark:prose-invert max-w-none [&_p]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:text-foreground [&_p]:text-foreground [&_strong]:text-foreground [&_h1]:text-foreground [&_h2]:text-foreground [&_h3]:text-foreground [&_code]:text-foreground">
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      </div>
+                    ) : (
+                      <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                    )}
                   </div>
                 </div>
               ))}

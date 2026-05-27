@@ -13,13 +13,14 @@ import { getSummary, saveAdvice } from "@/lib/actions/statements.action";
 import { getBudget } from "@/lib/actions/users.action";
 import { generateStory } from "@/lib/actions/insights.action";
 import { getPostHogClient } from "@/lib/posthog-server";
-import { BadgeIndianRupee } from "lucide-react";
-import { formatRedacted, formatTimestamp } from "@/utils/format";
+import { formatTimestamp } from "@/utils/format";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { StatementCharts } from "@/components/application/charts/statement-charts";
 import { BudgetMetricCards } from "@/components/application/charts/budget-metric-cards";
 import type { SummaryData } from "@/types";
 import { getSummaries } from "@/lib/actions/statements.action";
-import { SelectStatementAnalytical } from "@/components/SelectStatementAnalytical";
+import { SelectStatement } from "@/components/SelectStatement";
 
 interface DashboardPageProps {
   params: Promise<{ id: string }>;
@@ -79,7 +80,7 @@ const page = async ({ params }: DashboardPageProps) => {
             Financial Analytics Overview
           </p>
           <div className="py-6 self-end">
-            <SelectStatementAnalytical summaries={summaries} />
+            <SelectStatement url='/dashboard/analytics' summaries={summaries} />
           </div>
           <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center gap-6">
@@ -109,8 +110,8 @@ const page = async ({ params }: DashboardPageProps) => {
               <div className="flex flex-col gap-4">
                 <h2>AI Advice: </h2>
                 {story && (
-                  <div className="bg-card border border-border rounded-lg p-6 whitespace-pre-line text-foreground leading-relaxed">
-                    {story}
+                  <div className="bg-card border border-border rounded-lg p-6 text-foreground leading-relaxed">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{story}</ReactMarkdown>
                   </div>
                 )}
                 {fraudAlerts.length > 0 ? (

@@ -17,20 +17,23 @@ interface Summary {
 }
 
 function formatLabel(s: Summary) {
-  if (s.slug) return s.slug;
-  const date = new Date(s.created_at).toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "short",
+  const d = new Date(s.created_at);
+  const date = d.toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "2-digit",
     year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
   });
   const label = s.summary?.health_score?.health_label;
   return label ? `${date} (${label})` : date;
 }
 
-export function SelectStatement({ summaries }: { summaries: Summary[] }) {
+export function SelectStatement({ summaries,url }: { summaries: Summary[],url:string }) {
   const router = useRouter();
   return (
-    <Select onValueChange={(id) => router.push(`/dashboard/${id}`)}>
+    <Select onValueChange={(id) => router.push(`${url}/${id}`)}>
       <SelectTrigger className="size-50 text-xl p-6">
         <SelectValue placeholder="Statements" />
       </SelectTrigger>

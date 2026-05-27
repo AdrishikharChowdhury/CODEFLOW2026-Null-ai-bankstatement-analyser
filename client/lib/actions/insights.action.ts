@@ -40,7 +40,7 @@ Given the following bank statement analysis in JSON format, write a brief financ
 
 Tone: Conversational, empathetic, direct. No jargon. No dashboards. Make it feel like a friend giving financial advice.
 
-Return ONLY the narrative text, no preamble, no markdown.`,
+Use clean markdown formatting — **bold** for key figures and - or 1. for lists where appropriate. Return ONLY the narrative text, no preamble.`,
       },
       {
         role: "user",

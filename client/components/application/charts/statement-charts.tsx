@@ -55,13 +55,7 @@ export function StatementCharts({
           <MetricCard
             label="Savings Rate"
             value={`${healthScore.savings_rate.toFixed(1)}%`}
-            color={
-              healthScore.health_label === "Strong"
-                ? "text-green-600"
-                : healthScore.health_label === "Critical"
-                ? "text-red-400"
-                : "text-amber-400"
-            }
+            color={healthScore.savings_rate >= 20 ? "text-green-600" : "text-red-400"}
           />
         </div>
 
@@ -139,8 +133,11 @@ export function StatementCharts({
             <BarChart
               xAxis={[
                 {
-                  data: recurringPayments.slice(0, 8).map((p) => p.merchant),
+                  data: recurringPayments.slice(0, 8).map((p) =>
+                    `${p.first_seen} – ${p.last_seen}`
+                  ),
                   scaleType: "band",
+                  
                 },
               ]}
               series={[

@@ -7,6 +7,7 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeft,
+  History
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,6 +19,7 @@ const navItems = [
   { name: "Dashboard", icon: Home, href: "/dashboard" },
   { name: "Analytics", icon: BarChart3, href: "/dashboard/analytics" },
   { name: "Statements", icon: FileText, href: "/dashboard/statements" },
+  { name: "History", icon: History, href: "/dashboard/history" },
   { name: "Settings", icon: Settings, href: "/dashboard/settings" },
 ];
 
