@@ -8,7 +8,6 @@ export default function StatementsPage() {
       <div className="w-full max-w-lg">
         <StatementUpload />
       </div>
-      <GenerateSummaryLink className="cursor-pointer w-max h-max py-3 md:py-4 px-6 md:px-8 rounded-2xl border-2 border-border text-white transition-all hover:bg-primary/80 bg-primary text-sm md:text-base" />
     </div>
   );
 }

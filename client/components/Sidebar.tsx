@@ -51,7 +51,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
 
       {/* Sidebar - fixed on all sizes, drawer on mobile, fixed on desktop */}
       <aside
-        className={`fixed left-0 top-0 h-dvh bg-sidebar-background border-r border-border flex flex-col overflow-y-auto transition-all duration-300 z-50 ${
+        className={`fixed left-0 top-0 h-dvh bg-blue-200 dark:bg-indigo-950 border-r border-border flex flex-col overflow-y-auto transition-all duration-300 z-50 ${
           collapsed ? "w-16" : "w-64"
         } ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
@@ -68,7 +68,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
                 alt="logo"
               />
               {!collapsed && (
-                <div className="flex flex-col gap-2 truncate">
+                <div className="flex flex-col gap-2 ">
                   <h3 className="text-sidebar-foreground font-semibold text-sm">
                     Financialo
                   </h3>
