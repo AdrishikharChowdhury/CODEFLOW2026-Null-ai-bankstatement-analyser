@@ -79,18 +79,18 @@ export function StatementCharts({
                           label: c.ai_category,
                           value: c.debit_value,
                         })),
-                        innerRadius: 60,
-                        outerRadius: Math.min(pieWidth / 3.5, 120),
+                        innerRadius: 50,
+                        outerRadius: Math.min(pieWidth / 2.5, 110),
                         paddingAngle: 2,
                         cornerRadius: 4,
                       },
                     ]}
                     width={pieWidth}
-                    height={300}
+                    height={320}
                     slotProps={{
                       legend: {
-                        direction: "vertical",
-                        position: { vertical: "middle", horizontal: "end" },
+                        direction: "horizontal",
+                        position: { vertical: "bottom", horizontal: "center" },
                       },
                     }}
                   />
