@@ -109,9 +109,9 @@ const Chatbot = () => {
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[85%] p-3 rounded-2xl text-sm ${
+                    className={`max-w-[85%] p-3 rounded-2xl text-sm dark:bg-indigo-950 ${
                       msg.role === "user"
-                        ? "bg-primary text-primary-foreground rounded-tr-none"
+                        ? "bg-primary text-white rounded-tr-none"
                         : "bg-muted text-foreground rounded-tl-none border border-border"
                     }`}
                   >

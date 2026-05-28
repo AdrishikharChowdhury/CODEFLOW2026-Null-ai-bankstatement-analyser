@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import Chatbot from "@/components/Chatbot";
 import { Menu } from "lucide-react";
@@ -8,6 +9,8 @@ import { Menu } from "lucide-react";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const hideChat = pathname === "/dashboard" || pathname === "/dashboard/statements" || pathname==="/dashboard/settings"|| pathname==="/dashboard/analytics"|| pathname==="/dashboard/history" ;
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -33,7 +36,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <span className="text-lg font-semibold text-foreground">Financialo</span>
         </div>
         <div className="p-4 md:p-8">{children}</div>
-        <Chatbot />
+        {!hideChat && <Chatbot />}
       </div>
     </div>
   );
