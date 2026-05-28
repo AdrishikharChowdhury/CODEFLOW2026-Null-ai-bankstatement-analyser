@@ -51,29 +51,38 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
 
       {/* Sidebar - fixed on all sizes, drawer on mobile, fixed on desktop */}
       <aside
-        className={`fixed left-0 top-0 h-screen bg-sidebar-background border-r border-sidebar-background/80 flex flex-col transition-all duration-300 z-50 ${
+        className={`fixed left-0 top-0 h-dvh bg-sidebar-background border-r border-sidebar-background/80 flex flex-col overflow-y-auto transition-all duration-300 z-50 ${
           collapsed ? "w-16" : "w-64"
         } ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >
-        <div className={`border-b border-sidebar-background/80 ${collapsed ? "p-3" : "p-6"}`}>
-          <div className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} mb-4`}>
-            <Image
-              src="/logo.svg"
-              width={collapsed ? 32 : 60}
-              height={collapsed ? 32 : 60}
-              className="object-cover rounded-full shrink-0"
-              alt="logo"
-            />
-            {!collapsed && (
-              <div className="flex flex-col gap-2 truncate">
-                <h3 className="text-sidebar-foreground font-semibold text-sm">
-                  Financialo
-                </h3>
-                <p className="text-sidebar-foreground/60 text-xs">AI Bank Statement Analyser</p>
-              </div>
-            )}
+        <div className={`shrink-0 border-b border-sidebar-background/80 ${collapsed ? "p-3" : "p-6"}`}>
+          <div className={`flex items-center justify-between ${collapsed ? "flex-col" : ""}`}>
+            <div className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} mb-4`}>
+              <Image
+                src="/logo.svg"
+                width={collapsed ? 32 : 60}
+                height={collapsed ? 32 : 60}
+                className="object-cover rounded-full shrink-0"
+                alt="logo"
+              />
+              {!collapsed && (
+                <div className="flex flex-col gap-2 truncate">
+                  <h3 className="text-sidebar-foreground font-semibold text-sm">
+                    Financialo
+                  </h3>
+                  <p className="text-sidebar-foreground/60 text-xs">AI Bank Statement Analyser</p>
+                </div>
+              )}
+            </div>
+            <button
+              onClick={onMobileClose}
+              className="md:hidden self-start p-1 text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
+              aria-label="Close menu"
+            >
+              <X className="size-5" />
+            </button>
           </div>
           <Show when="signed-out">
             <SignInButton mode="modal">
@@ -85,15 +94,6 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
             </SignInButton>
           </Show>
         </div>
-
-        {/* Mobile close button */}
-        <button
-          onClick={onMobileClose}
-          className="md:hidden absolute top-4 right-4 p-1 text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors"
-          aria-label="Close menu"
-        >
-          <X className="size-5" />
-        </button>
 
         <nav className={`flex-1 space-y-1 ${collapsed ? "p-2" : "p-4"}`}>
           {navItems.map((item) => {
@@ -121,7 +121,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           })}
         </nav>
 
-        <div className={`border-t border-sidebar-background/80 ${collapsed ? "p-2" : "p-4"}`}>
+        <div className={`shrink-0 border-t border-sidebar-background/80 ${collapsed ? "p-2" : "p-4"}`}>
           <div className={`flex items-center ${collapsed ? "justify-center flex-col gap-3" : "justify-center gap-8 pt-8"}`}>
             <UserButton
               appearance={{
