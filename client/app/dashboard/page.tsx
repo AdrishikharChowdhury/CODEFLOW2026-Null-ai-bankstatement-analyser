@@ -10,10 +10,10 @@ export default async function DashboardPage() {
   const summaries = await getSummaries(user.id);
 
   return (
-    <div className="max-w-400 mx-auto flex flex-col">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">Detailed Spending Analysis</p>
+    <div className="max-w-7xl mx-auto w-full flex flex-col justify-center min-h-[calc(100dvh-8rem)]">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-muted-foreground text-sm md:text-base mt-1">Detailed Spending Analysis</p>
       </div>
       <PerformanceCharts summaries={summaries} />
     </div>

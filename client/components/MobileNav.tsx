@@ -19,7 +19,7 @@ export function MobileNav() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-[200] md:hidden">
+        <div className="fixed inset-0 z-200 md:hidden">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-0 h-full w-64 bg-background border-l border-border p-6 shadow-2xl">
             <div className="flex justify-end mb-8">

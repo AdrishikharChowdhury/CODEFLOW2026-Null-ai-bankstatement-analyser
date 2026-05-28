@@ -75,7 +75,7 @@ const Banner = () => {
                     src="/logo.svg"
                     width={140}
                     height={140}
-                    className="object-cover rounded-xl w-24 sm:w-28 md:w-36 lg:w-[180px]"
+                    className="object-cover rounded-xl w-24 sm:w-28 md:w-36 lg:w-45"
                     alt="Financialo logo"
                   />
                 </div>

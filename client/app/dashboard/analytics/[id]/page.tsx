@@ -75,18 +75,20 @@ const page = async ({ params }: DashboardPageProps) => {
 
   return (
     <div className="max-w-400 mx-auto flex flex-col">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Analytics</h1>
-          <p className="text-muted-foreground mb-8">
-            Financial Analytics Overview
-          </p>
-          <div className="py-6 self-end">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Analytics</h1>
+              <p className="text-muted-foreground text-sm md:text-base">
+                Financial Analytics Overview
+              </p>
+            </div>
             <SelectStatement url='/dashboard/analytics' summaries={summaries} />
           </div>
           <div className="flex flex-col gap-6">
-            <div className="flex justify-between items-center gap-6">
-              <h1 className="text-center">Statement Summary</h1>
-              <p className="mt-4 text-lg">
-                <span className="font-extrabold text-xl">Created At: </span>
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+              <h1 className="text-xl md:text-2xl font-semibold text-foreground">Statement Summary</h1>
+              <p className="text-sm md:text-lg text-muted-foreground">
+                <span className="font-extrabold">Created At: </span>
                 {formatTimestamp(created_at)}
               </p>
             </div>
@@ -101,27 +103,27 @@ const page = async ({ params }: DashboardPageProps) => {
             />
             
             <div className="flex flex-col gap-4">
-              <h2>Recomendations:</h2>
-              <ul className="flex flex-col gap-4 list-disc ml-4">
+              <h2 className="text-lg md:text-xl font-semibold text-foreground">Recomendations:</h2>
+              <ul className="flex flex-col gap-4 list-disc ml-4 text-sm md:text-base text-foreground">
                 {recommendations.map((recommendation, idx: number) => (
-                  <li key={idx}>{recommendation}</li>
+                  <li key={idx} className="leading-relaxed">{recommendation}</li>
                 ))}
               </ul>
               <div className="flex flex-col gap-4">
-                <h2>AI Advice: </h2>
+                <h2 className="text-lg md:text-xl font-semibold text-foreground">AI Advice: </h2>
                 {story && (
-                  <div className="bg-card border border-border rounded-lg p-6 text-foreground leading-relaxed">
+                  <div className="bg-card border border-border rounded-lg p-4 md:p-6 text-foreground leading-relaxed text-sm md:text-base">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{story}</ReactMarkdown>
                   </div>
                 )}
                 {fraudAlerts.length > 0 ? (
-                  <div className="bg-red-900 border border-red-200 rounded-lg p-4">
+                  <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4 md:p-6">
                     {fraudAlerts.map((a, i) => (
-                      <p key={i} className="text-red-700 font-medium">{a}</p>
+                      <p key={i} className="text-red-600 dark:text-red-400 font-medium text-sm md:text-base">{a}</p>
                     ))}
                   </div>
                 ) : (
-                  <p className="bg-card border border-border rounded-lg p-6 whitespace-pre-line text-muted-foreground leading-relaxed">
+                  <p className="bg-card border border-border rounded-lg p-4 md:p-6 whitespace-pre-line text-muted-foreground leading-relaxed text-sm md:text-base">
                     Good News No Fraud has been detected
                   </p>
                 )}

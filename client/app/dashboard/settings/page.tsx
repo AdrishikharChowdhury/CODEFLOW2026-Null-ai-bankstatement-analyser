@@ -102,14 +102,14 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-full">
-        <div className="max-w-md mx-auto flex flex-col items-center">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Settings</h1>
-          <p className="text-muted-foreground mb-8">
+    <div className="flex justify-center items-center min-h-[calc(100dvh-8rem)]">
+        <div className="w-full max-w-md mx-auto flex flex-col items-center px-0">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Settings</h1>
+          <p className="text-muted-foreground text-sm md:text-base mb-8 text-center">
             Set your daily, weekly, monthly &amp; yearly budget limits
           </p>
 
-          <Card className="w-full sm:max-w-md">
+          <Card className="w-full">
             <CardHeader>
               <CardTitle>Budget Limits</CardTitle>
               <CardDescription>
@@ -244,7 +244,7 @@ export default function SettingsPage() {
             </CardContent>
             {!loading && (
               <CardFooter>
-                <Field orientation="horizontal">
+                <Field orientation="horizontal" className="flex-col sm:flex-row gap-2 sm:gap-0">
                   <Button type="button" variant="outline" onClick={() => {
                     form.reset({ daily: "", weekly: "", monthly: "", yearly: "" })
                   }}>

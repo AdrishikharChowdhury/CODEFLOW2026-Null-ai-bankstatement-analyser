@@ -34,7 +34,7 @@ export function SelectStatement({ summaries,url }: { summaries: Summary[],url:st
   const router = useRouter();
   return (
     <Select onValueChange={(id) => router.push(`${url}/${id}`)}>
-      <SelectTrigger className="size-50 text-xl p-6">
+      <SelectTrigger className="w-full sm:w-auto text-sm sm:text-xl p-3 sm:p-6">
         <SelectValue placeholder="Statements" />
       </SelectTrigger>
       <SelectContent>
