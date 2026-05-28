@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 import pdfplumber
 from dotenv import load_dotenv
-from nemotron_ocr import extract_text_with_nemotron
 
 load_dotenv()
 
@@ -202,22 +201,6 @@ def extract_rows_from_pdf(pdf_buffer):
     combined_text = "\n".join(all_raw_text)
     df = pd.DataFrame(parsed_transactions).drop_duplicates()
 
-    # Nemotron OCR fallback: pdfplumber got no text (scanned / image-based PDF)
-    if df.empty and not combined_text.strip():
-        pdf_buffer.seek(0)
-        pdf_bytes = pdf_buffer.read()
-        ocr_text = extract_text_with_nemotron(pdf_bytes)
-        if ocr_text.strip():
-            blocks = _extract_text_blocks(ocr_text)
-            ocr_transactions = []
-            for block in blocks:
-                txn = _parse_transaction_block(block)
-                if txn:
-                    ocr_transactions.append(txn)
-            df = pd.DataFrame(ocr_transactions).drop_duplicates()
-            combined_text = ocr_text
-
-    # Gemini LLM fallback: regex parsing yielded nothing
     if df.empty and combined_text.strip():
         df = _gemini_parse_fallback(combined_text)
 
