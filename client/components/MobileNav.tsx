@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { navlinks } from "@/lib/constants";
+import { ThemeToggleButton } from "./ThemeToggleButton";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -19,8 +20,11 @@ export function MobileNav() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-200 md:hidden">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setOpen(false)} />
+        <div className="fixed inset-0 z-200 md:hidden ">
+          <div
+            className="absolute inset-0 dark:bg-black/40 backdrop-blur-sm"
+            onClick={() => setOpen(false)}
+          />
           <div className="absolute right-0 top-0 h-full w-64 bg-background border-l border-border p-6 shadow-2xl">
             <div className="flex justify-end mb-8">
               <button
@@ -31,7 +35,7 @@ export function MobileNav() {
                 <X className="size-5" />
               </button>
             </div>
-            <nav className="flex flex-col gap-4 bg-black p-5 rounded-lg">
+            <nav className="bg-blue-100 flex flex-col gap-4 dark:bg-black dark:text-white p-5 rounded-lg">
               {navlinks.map((link) => (
                 <Link
                   key={link.name}
@@ -42,6 +46,9 @@ export function MobileNav() {
                   {link.name}
                 </Link>
               ))}
+              <div className="self-end">
+                <ThemeToggleButton />
+              </div>
             </nav>
           </div>
         </div>

@@ -51,13 +51,13 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
 
       {/* Sidebar - fixed on all sizes, drawer on mobile, fixed on desktop */}
       <aside
-        className={`fixed left-0 top-0 h-dvh bg-sidebar-background border-r border-sidebar-background/80 flex flex-col overflow-y-auto transition-all duration-300 z-50 ${
+        className={`fixed left-0 top-0 h-dvh bg-sidebar-background border-r border-border flex flex-col overflow-y-auto transition-all duration-300 z-50 ${
           collapsed ? "w-16" : "w-64"
         } ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >
-        <div className={`shrink-0 border-b border-sidebar-background/80 ${collapsed ? "p-3" : "p-6"}`}>
+        <div className={`shrink-0 border-b border-border ${collapsed ? "p-3" : "p-6"}`}>
           <div className={`flex items-center justify-between ${collapsed ? "flex-col" : ""}`}>
             <div className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} mb-4`}>
               <Image
@@ -110,7 +110,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
                 } ${
                   isActive
                     ? "bg-primary/10 text-primary"
-                    : "text-sidebar-foreground/60 hover:bg-sidebar-background/50 hover:text-sidebar-foreground"
+                    : "text-sidebar-foreground/60 hover:bg-muted hover:text-sidebar-foreground"
                 }`}
                 title={collapsed ? item.name : undefined}
               >
@@ -121,7 +121,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           })}
         </nav>
 
-        <div className={`shrink-0 border-t border-sidebar-background/80 ${collapsed ? "p-2" : "p-4"}`}>
+        <div className={`shrink-0 border-t border-border ${collapsed ? "p-2" : "p-4"}`}>
           <div className={`flex items-center ${collapsed ? "justify-center flex-col gap-3" : "justify-center gap-8 pt-8"}`}>
             <UserButton
               appearance={{
@@ -138,7 +138,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
             <ThemeToggleButton />
             <button
               onClick={onToggle}
-              className="hidden md:flex items-center rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-background/50 hover:text-sidebar-foreground transition-all duration-200"
+              className="hidden md:flex items-center rounded-lg text-sidebar-foreground/60 hover:bg-muted hover:text-sidebar-foreground transition-all duration-200"
               title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               {collapsed ? <PanelLeft className="size-5" /> : <PanelLeftClose className="size-8 shrink-0" />}
@@ -147,7 +147,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           <Show when="signed-out">
             <SignOutButton>
               <button
-                className={`flex items-center rounded-lg text-sidebar-foreground/60 hover:bg-sidebar-background/50 hover:text-sidebar-foreground transition-all duration-200 w-full ${
+                className={`flex items-center rounded-lg text-sidebar-foreground/60 hover:bg-muted hover:text-sidebar-foreground transition-all duration-200 w-full ${
                   collapsed ? "justify-center p-2" : "gap-3 px-4 py-3"
                 }`}
                 title={collapsed ? "Sign Out" : undefined}
