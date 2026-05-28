@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/input-group"
 import { updateBudget, getBudget } from "@/lib/actions/users.action"
 import { redirect } from "next/navigation";
+import ManageStatements from "@/components/ManageStatements";
 
 const formSchema = z.object({
   daily: z
@@ -106,9 +107,9 @@ export default function SettingsPage() {
         <div className="w-full max-w-md mx-auto flex flex-col items-center px-0">
           <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Settings</h1>
           <p className="text-muted-foreground text-sm md:text-base mb-8 text-center">
-            Set your daily, weekly, monthly &amp; yearly budget limits
+            Set your daily, weekly, monthly &amp; yearly budget limits and manage your statements data
           </p>
-
+          <div className="flex flex-col gap-8 w-full">
           <Card className="w-full">
             <CardHeader>
               <CardTitle>Budget Limits</CardTitle>
@@ -257,6 +258,8 @@ export default function SettingsPage() {
               </CardFooter>
             )}
           </Card>
+          <ManageStatements />
+          </div>
         </div>
     </div>
   )

@@ -4,12 +4,17 @@ import { auth } from "@clerk/nextjs/server";
 import { createAdminClient } from "@/utils/supabase-admin";
 import { createSupabaseClient } from "@/utils/supabase";
 import type { ParseResponse, SummaryData } from "@/types";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
-export async function uploadStatement(
-  formData: FormData
-): Promise<
+export async function uploadStatement(formData: FormData): Promise<
   | { error: string }
-  | { success: true; url: string; data: ParseResponse | null; parseError?: string }
+  | {
+      success: true;
+      url: string;
+      data: ParseResponse | null;
+      parseError?: string;
+    }
 > {
   const { userId } = await auth();
   if (!userId) return { error: "Not authenticated" };
@@ -55,9 +60,16 @@ export async function uploadStatement(
 }
 
 export const getSummaries = async (
-  userId: string
+  userId: string,
 ): Promise<
-  { summary: SummaryData; id: string; created_at: string; ai_advice: string | null; fraud_detection: string | null; slug: string | null }[]
+  {
+    summary: SummaryData;
+    id: string;
+    created_at: string;
+    ai_advice: string | null;
+    fraud_detection: string | null;
+    slug: string | null;
+  }[]
 > => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
@@ -67,13 +79,25 @@ export const getSummaries = async (
     .eq("user_id", userId);
 
   if (error) throw new Error(error.message);
-  return data as { summary: SummaryData; id: string; created_at: string; ai_advice: string | null; fraud_detection: string | null; slug: string | null }[];
+  return data as {
+    summary: SummaryData;
+    id: string;
+    created_at: string;
+    ai_advice: string | null;
+    fraud_detection: string | null;
+    slug: string | null;
+  }[];
 };
 
 export const getSummary = async (
   userId: string,
-  id: string
-): Promise<{ summary: SummaryData; created_at: string; ai_advice: string | null; fraud_detection: string | null }> => {
+  id: string,
+): Promise<{
+  summary: SummaryData;
+  created_at: string;
+  ai_advice: string | null;
+  fraud_detection: string | null;
+}> => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("statements")
@@ -82,13 +106,18 @@ export const getSummary = async (
     .eq("id", id);
 
   if (error) throw new Error(error.message);
-  return data[0] as { summary: SummaryData; created_at: string; ai_advice: string | null; fraud_detection: string | null };
+  return data[0] as {
+    summary: SummaryData;
+    created_at: string;
+    ai_advice: string | null;
+    fraud_detection: string | null;
+  };
 };
 
 export const saveAdvice = async (
   id: string,
   aiAdvice: string,
-  fraudDetection: string
+  fraudDetection: string,
 ) => {
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
@@ -101,4 +130,19 @@ export const saveAdvice = async (
     .eq("user_id", userId);
 
   if (error) throw new Error(error.message);
+};
+
+export const deleteStatement = async (id: string) => {
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
+  const supabase = createSupabaseClient();
+  const { error } = await supabase
+    .from("statements")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/dashboard/settings");
 };

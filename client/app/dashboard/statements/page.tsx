@@ -1,5 +1,4 @@
 import { StatementUpload } from "@/components/application/file-upload/statement-upload";
-import { GenerateSummaryLink } from "@/components/application/GenerateSummaryLink";
 
 export default function StatementsPage() {
   return (
