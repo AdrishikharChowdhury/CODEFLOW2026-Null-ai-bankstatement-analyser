@@ -30,6 +30,7 @@ model/           ML model service (SetFit classification)
 - **PII Sanitization** — Automatic redaction of account numbers, IFSC, emails, UPI IDs
 - **Analytics Dashboard** — MUI X-Charts, expense pie charts, balance timeline, budget metric cards
 - **Global Dark/Light Theme** — Unified via `<html>.dark` class, persisted in localStorage, works across all pages
+- **Clerk UI Theming** — Clerk auth components (UserButton, UserProfile/Manage Account modal) use solid `bg-card` backgrounds that automatically switch between light and dark mode via CSS custom properties
 - **Collapsible Sidebar** — Dashboard sidebar with icon-only collapsed state, theme toggle, tooltips
 - **Skeleton Loaders** — phantom-ui structure-aware shimmer skeletons for tables, charts, and cards on all dashboard routes
 - **Upload → Auto-Redirect** — ldrs DotWave loader overlay during statement processing, then redirects to dashboard
