@@ -1,7 +1,7 @@
 import { navlinks } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
-import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, Show, UserButton, OrganizationSwitcher } from "@clerk/nextjs";
 import { ThemeToggleButton } from "@/components/ThemeToggleButton";
 import { MobileNav } from "@/components/MobileNav";
 
@@ -61,6 +61,30 @@ const Navbar = () => {
               },
             }}
             userProfileProps={{
+              appearance: {
+                elements: {
+                  cardBox: "bg-card text-card-foreground shadow-xl border border-border",
+                  modalBackdrop: "bg-black/60 backdrop-blur-sm",
+                  rootBox: "bg-card",
+                  page: "bg-card",
+                  navbar: "bg-muted border-r border-border",
+                  profileSection: "bg-card",
+                  profilePage: "bg-card",
+                },
+              },
+            }}
+          />
+          <OrganizationSwitcher
+            afterCreateOrganizationUrl="/dashboard"
+            afterSelectOrganizationUrl="/dashboard"
+            afterSelectPersonalUrl="/dashboard"
+            appearance={{
+              elements: {
+                organizationSwitcherTrigger:
+                  "py-1.5 px-3 border border-border rounded-lg bg-card text-foreground text-xs",
+              },
+            }}
+            organizationProfileProps={{
               appearance: {
                 elements: {
                   cardBox: "bg-card text-card-foreground shadow-xl border border-border",

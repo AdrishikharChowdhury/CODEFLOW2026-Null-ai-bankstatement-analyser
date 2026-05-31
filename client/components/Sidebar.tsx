@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton, SignInButton, SignOutButton, Show } from "@clerk/nextjs";
+import { UserButton, SignInButton, SignOutButton, Show, OrganizationSwitcher } from "@clerk/nextjs";
 import Image from "next/image";
 import { ThemeToggleButton } from "@/components/ThemeToggleButton";
 import { useEffect } from "react";
@@ -122,6 +122,34 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
         </nav>
 
         <div className={`shrink-0 border-t border-border ${collapsed ? "p-2" : "p-4"}`}>
+          {!collapsed && (
+            <div className="mb-3">
+              <OrganizationSwitcher
+                afterCreateOrganizationUrl="/dashboard"
+                afterSelectOrganizationUrl="/dashboard"
+                afterSelectPersonalUrl="/dashboard"
+                appearance={{
+                  elements: {
+                    organizationSwitcherTrigger:
+                      "py-1.5 px-3 border border-border rounded-lg bg-card text-foreground text-xs w-full",
+                  },
+                }}
+                organizationProfileProps={{
+                  appearance: {
+                    elements: {
+                      cardBox: "bg-card text-card-foreground shadow-xl border border-border",
+                      modalBackdrop: "bg-black/60 backdrop-blur-sm",
+                      rootBox: "bg-card",
+                      page: "bg-card",
+                      navbar: "bg-muted border-r border-border",
+                      profileSection: "bg-card",
+                      profilePage: "bg-card",
+                    },
+                  },
+                }}
+              />
+            </div>
+          )}
           <div className={`flex items-center ${collapsed ? "justify-center flex-col gap-3" : "justify-center gap-8 pt-8"}`}>
             <UserButton
               appearance={{

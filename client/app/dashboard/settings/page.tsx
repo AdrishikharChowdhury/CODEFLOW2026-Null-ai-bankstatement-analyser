@@ -31,6 +31,7 @@ import {
 import { updateBudget, getBudget } from "@/lib/actions/users.action"
 import { redirect } from "next/navigation";
 import ManageStatements from "@/components/ManageStatements";
+import { OrganizationManager } from "@/components/OrganizationManager";
 
 const formSchema = z.object({
   daily: z
@@ -103,13 +104,13 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-[calc(100dvh-8rem)]">
-        <div className="w-full max-w-md mx-auto flex flex-col items-center px-0">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Settings</h1>
+    <div className="flex justify-center items-start min-h-[calc(100dvh-8rem)] pt-8">
+        <div className="w-full max-w-5xl mx-auto px-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2 text-center">Settings</h1>
           <p className="text-muted-foreground text-sm md:text-base mb-8 text-center">
             Set your daily, weekly, monthly &amp; yearly budget limits and manage your statements data
           </p>
-          <div className="flex flex-col gap-8 w-full">
+          <div className="grid grid-cols-2 gap-6 w-full">
           <Card className="w-full">
             <CardHeader>
               <CardTitle>Budget Limits</CardTitle>
@@ -258,7 +259,20 @@ export default function SettingsPage() {
               </CardFooter>
             )}
           </Card>
-          <ManageStatements />
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Organization</CardTitle>
+              <CardDescription>
+                Manage your organizations, switch between them, or create a new one.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <OrganizationManager />
+            </CardContent>
+          </Card>
+          <div className="col-span-2">
+            <ManageStatements />
+          </div>
           </div>
         </div>
     </div>

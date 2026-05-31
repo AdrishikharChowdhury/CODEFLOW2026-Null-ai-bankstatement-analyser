@@ -32,6 +32,19 @@ export default function RootLayout({
          <ClerkProvider
           appearance={{
             theme: shadcn,
+            variables: {
+              colorBackground: "hsl(var(--card))",
+              colorForeground: "hsl(var(--card-foreground))",
+              colorInput: "hsl(var(--input))",
+              colorPrimary: "hsl(var(--primary))",
+              colorPrimaryForeground: "hsl(var(--primary-foreground))",
+              colorInputForeground: "hsl(var(--card-foreground))",
+              colorMuted: "hsl(var(--muted))",
+              colorMutedForeground: "hsl(var(--muted-foreground))",
+              colorNeutral: "hsl(var(--foreground))",
+              colorDanger: "hsl(var(--destructive))",
+              colorRing: "hsl(var(--ring))",
+            },
             userProfile: {
               elements: {
                 cardBox: "bg-card text-card-foreground shadow-xl border border-border",
