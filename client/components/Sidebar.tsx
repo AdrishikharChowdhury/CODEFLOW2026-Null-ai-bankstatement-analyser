@@ -133,6 +133,17 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
                   userButtonPopoverFooter: "bg-muted",
                   userButtonTrigger: collapsed ? "scale-100" : "scale-125",
                 },
+                userProfile: {
+                  elements: {
+                    cardBox: "bg-card text-card-foreground shadow-xl border border-border",
+                    modalBackdrop: "bg-black/60 backdrop-blur-sm",
+                    rootBox: "bg-card",
+                    page: "bg-card",
+                    navbar: "bg-muted border-r border-border",
+                    profileSection: "bg-card",
+                    profilePage: "bg-card",
+                  },
+                },
               }}
             />
             <ThemeToggleButton />

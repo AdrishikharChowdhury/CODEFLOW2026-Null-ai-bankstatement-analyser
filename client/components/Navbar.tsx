@@ -59,6 +59,17 @@ const Navbar = () => {
                 userButtonAvatarBox: "h-10 w-10 sm:h-12 sm:w-12 ring-2 ring-primary/50 hover:ring-primary transition-all",
                 userButtonTrigger: "scale-160",
               },
+              userProfile: {
+                elements: {
+                  cardBox: "bg-card text-card-foreground shadow-xl border border-border",
+                  modalBackdrop: "bg-black/60 backdrop-blur-sm",
+                  rootBox: "bg-card",
+                  page: "bg-card",
+                  navbar: "bg-muted border-r border-border",
+                  profileSection: "bg-card",
+                  profilePage: "bg-card",
+                },
+              },
             }}
           />
         </Show>

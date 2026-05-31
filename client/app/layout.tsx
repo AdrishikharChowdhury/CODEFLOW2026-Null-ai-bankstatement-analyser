@@ -29,7 +29,22 @@ export default function RootLayout({
       className={cn("h-full w-full scroll-smooth", "antialiased", notoSerifHentaigana.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col">
-         <ClerkProvider appearance={{ theme: shadcn }}>
+         <ClerkProvider
+          appearance={{
+            theme: shadcn,
+            userProfile: {
+              elements: {
+                cardBox: "bg-card text-card-foreground shadow-xl border border-border",
+                modalBackdrop: "bg-black/60 backdrop-blur-sm",
+                rootBox: "bg-card",
+                page: "bg-card",
+                navbar: "bg-muted border-r border-border",
+                profileSection: "bg-card",
+                profilePage: "bg-card",
+              },
+            },
+          }}
+        >
           <ThemeProvider>
             <SyncUser />
             {children}
