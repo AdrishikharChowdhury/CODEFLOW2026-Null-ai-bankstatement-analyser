@@ -86,6 +86,22 @@ npm install
 npm run dev            # Starts on http://localhost:3000
 ```
 
+### Docker
+
+```bash
+# Copy and fill in environment variables
+cp docker/.env.example docker/.env
+
+# Build and start all services
+docker compose -f docker/docker-compose.yml --env-file docker/.env up --build
+
+# Frontend: http://localhost:3000
+# Backend:  http://localhost:8000
+# Model:    http://localhost:8001
+```
+
+Dockerfiles are in `docker/` — see [docker/README.md](docker/README.md) for details.
+
 ### Data Flow
 
 ```
@@ -199,7 +215,7 @@ Browser → Next.js /api/parse → FastAPI :8000/api/parse
 - **Multi-User Family Accounts** — Shared dashboards for household budgeting with role-based access control.
 - **Automated Investment Suggestions** — Analyse surplus cash and recommend SIP allocations, fixed deposits, or debt fund investments based on risk profile.
 - **CI/CD & Testing** — Add unit/integration tests (pytest, Vitest), GitHub Actions CI, and automated deployment to cloud (Vercel + Railway/Fly.io).
-- **On-Premise Deployment** — Docker Compose setup for enterprises that want to self-host without sending financial data to third-party APIs.
+- **On-Premise Deployment** — Docker Compose setup in `docker/` for self-hosting without sending financial data to third-party APIs.
 
 ## License
 
